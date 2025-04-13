@@ -197,12 +197,12 @@ const maturityLevels = {
     }
 };
 
-// Risk baseline values by risk level - scaled for companies with revenue in millions
-// Values are now expressed in millions
+// Risk baseline values by risk level - now adjusted for high-revenue companies
+// Values are expressed in millions
 const riskValues = {
-    high: 0.3,    // 0.3 million = $300,000
-    medium: 0.18,  // 0.18 million = $180,000
-    low: 0.12      // 0.12 million = $120,000
+    high: 0.75,     // 0.75 million = $750,000 (increased from $300,000)
+    medium: 0.45,   // 0.45 million = $450,000 (increased from $180,000)
+    low: 0.30       // 0.30 million = $300,000 (increased from $120,000)
 };
 
 // Default service investment costs in millions for baseline (small company reference point)
