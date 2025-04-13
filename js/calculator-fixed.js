@@ -1,6 +1,6 @@
 /**
- * Core Calculator Logic (Fixed Version)
- * Handles ROI calculations based on user inputs, with proper scaling for large companies
+ * Core Calculator Logic
+ * Handles ROI calculations based on user inputs
  */
 
 // Store for saved scenarios
@@ -10,9 +10,7 @@ const savedScenarios = [];
 const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    maximumFractionDigits: 1,
-    notation: 'compact',
-    compactDisplay: 'short'
+    maximumFractionDigits: 0
 });
 
 /**
@@ -38,19 +36,12 @@ function calculateROI() {
     const industry = industryParameters[industryCode];
     const maturity = maturityLevels[maturityCode];
     
-    // Set service investment based on user input or scale by company size
-    const serviceInvestment = {};
-    
+    // Set service investment based on user input or defaults
+    const serviceInvestment = { ...defaultServiceInvestment };
     if (customInvestment) {
         serviceInvestment.year1 = customInvestment;
         serviceInvestment.year2 = customInvestment * 1.1; // 10% increase year 2
         serviceInvestment.year3 = customInvestment * 1.16; // 16% increase year 3
-    } else {
-        // Scale investment based on company size using logarithmic scaling
-        const baseInvestment = calculateScaledInvestment(revenue);
-        serviceInvestment.year1 = baseInvestment;
-        serviceInvestment.year2 = baseInvestment * 1.1; // 10% increase year 2
-        serviceInvestment.year3 = baseInvestment * 1.16; // 16% increase year 3
     }
     
     // Calculate procurement spend if not provided
@@ -131,54 +122,7 @@ function calculateROI() {
 }
 
 /**
- * Calculate a scaled investment cost based on company revenue
- * Uses logarithmic scaling to avoid linear growth with revenue
- * @param {number} revenue - Annual revenue
- * @returns {number} - Scaled investment cost
- */
-function calculateScaledInvestment(revenue) {
-    // Base investment for small-medium companies ($250,000)
-    const baseInvestment = 250000;
-    
-    // For companies with less than $50M revenue, use the base investment
-    if (revenue <= 50000000) {
-        return baseInvestment;
-    }
-    
-    // For larger companies, scale logarithmically with more aggressive scaling for large enterprises
-    // This creates more realistic investment costs that better reflect market rates
-    // Revenue tiers with updated scaling:
-    // $50M-$250M: 1.0x to 2.0x base  
-    // $250M-$1B: 2.0x to 3.5x base
-    // $1B-$5B: 3.5x to 6.0x base
-    // $5B-$20B: 6.0x to 9.0x base
-    // $20B+: 9.0x to 12.0x base
-    
-    if (revenue <= 250000000) { // $50M to $250M
-        const scaleFactor = 1.0 + (Math.log(revenue / 50000000) / Math.log(5)) * 1.0;
-        return baseInvestment * scaleFactor;
-    } 
-    else if (revenue <= 1000000000) { // $250M to $1B
-        const scaleFactor = 2.0 + (Math.log(revenue / 250000000) / Math.log(4)) * 1.5;
-        return baseInvestment * scaleFactor;
-    }
-    else if (revenue <= 5000000000) { // $1B to $5B
-        const scaleFactor = 3.5 + (Math.log(revenue / 1000000000) / Math.log(5)) * 2.5;
-        return baseInvestment * scaleFactor;
-    }
-    else if (revenue <= 20000000000) { // $5B to $20B
-        const scaleFactor = 6.0 + (Math.log(revenue / 5000000000) / Math.log(4)) * 3.0;
-        return baseInvestment * scaleFactor;
-    }
-    else { // Above $20B
-        const scaleFactor = 9.0 + (Math.log(revenue / 20000000000) / Math.log(10)) * 3.0;
-        // Cap at 12x for extremely large companies
-        return baseInvestment * Math.min(12.0, scaleFactor);
-    }
-}
-
-/**
- * Calculate benefits for a specific year with improved scaling for large companies
+ * Calculate benefits for a specific year
  * @param {number} year - Year number (1, 2, or 3)
  * @param {object} industry - Industry parameters
  * @param {object} maturity - Maturity level parameters
@@ -192,14 +136,8 @@ function calculateYearlyBenefits(year, industry, maturity, revenue, procurementS
     // Add annual growth rate for years 2-3
     const growthMultiplier = year > 1 ? Math.pow(1.03, year - 1) : 1;
     
-    // Calculate procurement cost savings with diminishing returns for very large companies
-    const procurementSavingsBase = procurementSpend * industry.averageSavingsPercent;
-    const procurementScalingFactor = revenue > 1000000000 ? 
-        1.0 - (Math.log10(revenue / 1000000000) * 0.1) : 1.0;
-    const procurementSavings = procurementSavingsBase * 
-        Math.max(0.5, procurementScalingFactor) * 
-        maturity.savingsMultiplier * 
-        growthMultiplier;
+    // Calculate procurement cost savings
+    const procurementSavings = procurementSpend * industry.averageSavingsPercent * maturity.savingsMultiplier * growthMultiplier;
     
     // Calculate carbon value impact
     let carbonReductionPercent;
@@ -211,38 +149,40 @@ function calculateYearlyBenefits(year, industry, maturity, revenue, procurementS
     const supplyChainEmissionsInTons = supplyChainEmissions / 1000;
     const carbonValueImpact = supplyChainEmissionsInTons * carbonPrice * carbonReductionPercent;
     
-    // Calculate risk mitigation value with improved scaling
-    // Convert risk values from millions to actual dollars
-    const baseRiskValue = riskValues[industry.riskLevel] * 1000000;
+    // Calculate risk mitigation value - scale based on company size
+    const baseRiskValue = riskValues[industry.riskLevel];
     
-    // Apply more reasonable revenue scaling with improved logarithmic approach
+    // Apply improved revenue scaling with enhanced approach for high-revenue companies
     const revenueScale = calculateRiskRevenueScale(revenue);
     
-    // Calculate revenue-based component with diminishing returns
-    const revenuePercentFactor = revenue > 1000000000 ? 
-        0.0002 * (1.0 - (Math.log10(revenue / 1000000000) * 0.1)) : 
-        0.0002;
+    // Calculate revenue-based risk component - enhanced for high-revenue companies
+    const revenueInBillions = revenue / 1000000000;
+    const riskMultiplier = industry.riskLevel === "high" ? 1.0 : industry.riskLevel === "medium" ? 0.6 : 0.3;
     
-    const revenuePercentComponent = revenue * 
-        Math.max(0.00005, revenuePercentFactor) * 
-        (industry.riskLevel === "high" ? 1.0 : industry.riskLevel === "medium" ? 0.6 : 0.3);
+    // Enhanced formula that increases more significantly with revenue for larger companies
+    let revenuePercentComponent;
+    if (revenueInBillions <= 1) {
+        // For companies under $1B
+        revenuePercentComponent = revenue * 0.0002 * riskMultiplier;
+    } else if (revenueInBillions <= 10) {
+        // For companies $1B-$10B - increasing impact
+        revenuePercentComponent = revenue * (0.0002 + (revenueInBillions - 1) * 0.00005) * riskMultiplier;
+    } else {
+        // For companies over $10B - further increased impact
+        revenuePercentComponent = revenue * (0.00065 + (Math.min(revenueInBillions, 100) - 10) * 0.00002) * riskMultiplier;
+    }
     
     // Calculate the total risk mitigation value with both components
     const riskMitigationValue = (baseRiskValue * revenueScale * maturity.riskReductionMultiplier * growthMultiplier) + 
                                (revenuePercentComponent * maturity.riskReductionMultiplier * growthMultiplier);
     
-    // Calculate brand value with diminishing returns for larger companies
+    // Calculate brand value / market access impact
     let brandValuePercent;
     if (year === 1) brandValuePercent = brandValueIncrease.year1;
     else if (year === 2) brandValuePercent = brandValueIncrease.year2;
     else brandValuePercent = brandValueIncrease.year3;
     
-    // Apply diminishing returns for brand value impact as company size increases
-    const brandScalingFactor = revenue > 1000000000 ? 
-        brandValuePercent * (1.0 - (Math.log10(revenue / 1000000000) * 0.05)) : 
-        brandValuePercent;
-    
-    const brandValueImpact = revenue * Math.max(brandValuePercent * 0.3, brandScalingFactor);
+    const brandValueImpact = revenue * brandValuePercent;
     
     // Calculate total benefits
     const total = procurementSavings + carbonValueImpact + riskMitigationValue + brandValueImpact;
@@ -257,24 +197,29 @@ function calculateYearlyBenefits(year, industry, maturity, revenue, procurementS
 }
 
 /**
- * Calculate the risk revenue scale using an improved logarithmic approach
+ * Calculate the risk revenue scale using a tiered approach
+ * Enhanced for high-revenue companies
  * @param {number} revenue - Annual revenue
  * @returns {number} - Calculated revenue scale factor
  */
 function calculateRiskRevenueScale(revenue) {
-    // Use logarithmic scaling for smoother progression
-    if (revenue <= 100000000) { // Up to $100M
-        return Math.max(0.5, revenue / 100000000);
-    }
-    else if (revenue <= 1000000000) { // $100M to $1B
-        return 1.0 + Math.log10(revenue / 100000000) * 0.75;
-    }
-    else if (revenue <= 10000000000) { // $1B to $10B
-        return 1.75 + Math.log10(revenue / 1000000000) * 0.75;
-    }
-    else { // Above $10B
-        return 2.5 + Math.log10(revenue / 10000000000) * 0.5;
-    }
+  // Base value for companies up to $100M
+  if (revenue <= 100000000) {
+    return Math.max(0.5, revenue / 100000000);
+  }
+  // Scale for companies between $100M and $1B
+  else if (revenue <= 1000000000) {
+    return 1.0 + (revenue - 100000000) / 900000000 * 1.5;
+  }
+  // Scale for companies between $1B and $10B - increased multiplier
+  else if (revenue <= 10000000000) {
+    return 2.5 + (revenue - 1000000000) / 9000000000 * 4.5;
+  }
+  // Scale for companies above $10B - significantly higher ceiling
+  else {
+    // Maximum value increased to 12 (from 10)
+    return 7.0 + Math.min((revenue - 10000000000) / 90000000000 * 5.0, 5.0);
+  }
 }
 
 /**
