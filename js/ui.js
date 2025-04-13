@@ -545,12 +545,25 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('loading').style.display = 'block';
         document.getElementById('results-container').innerHTML = '';
         
-        // Use setTimeout to allow the loading spinner to render before calculations begin
-        setTimeout(() => {
+        try {
+            // Perform calculation directly without setTimeout
+            // This avoids potential timing issues
             calculateROI();
+            
             // Hide loading spinner
             document.getElementById('loading').style.display = 'none';
-        }, 800); // Simulate calculation time
+        } catch (error) {
+            // Error handling for calculation issues
+            console.error("Calculation error:", error);
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('results-container').innerHTML = `
+                <div style="padding: 20px; background-color: #f8d7da; border-radius: 4px; color: #721c24;">
+                    <h3>Error in Calculation</h3>
+                    <p>Sorry, an error occurred during the calculation. Please check your inputs and try again.</p>
+                    <p>Error details: ${error.message}</p>
+                </div>
+            `;
+        }
     });
     
     // Reset button functionality
