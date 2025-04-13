@@ -71,12 +71,12 @@
                     
                    <div class="form-group">
     <label for="revenue">Annual Revenue <span class="tooltip"><span class="info-icon">i</span>
-        <span class="tooltiptext">Enter your annual revenue in thousands of dollars. For example, entering 100,000 means $100,000,000 (100 million dollars).</span></span></label>
+        <span class="tooltiptext">Enter your annual revenue in millions of dollars. For example, entering 100 means $100 million.</span></span></label>
     <div class="input-with-suffix">
-        <input type="number" id="revenue" placeholder="e.g., 100,000" required>
-        <span class="input-suffix">K</span>
+        <input type="number" id="revenue" placeholder="e.g., 100" required>
+        <span class="input-suffix">M</span>
     </div>
-    <span class="helper-text">Enter amount in thousands (e.g., 100,000 = $100,000,000)</span>
+    <span class="helper-text">Enter amount in millions (e.g., 100 = $100 million)</span>
 </div>
                     
                     <div class="form-group">
@@ -86,11 +86,11 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="procurement">Annual Procurement Spend (in thousands $) <span class="tooltip"><span class="info-icon">i</span>
+                        <label for="procurement">Annual Procurement Spend (in millions $) <span class="tooltip"><span class="info-icon">i</span>
                             <span class="tooltiptext">Optional: If left blank, will be calculated based on industry average</span></span></label>
                         <div class="input-with-suffix">
                             <input type="number" id="procurement" placeholder="Optional">
-                            <span class="input-suffix">K</span>
+                            <span class="input-suffix">M</span>
                         </div>
                     </div>
                     
@@ -113,11 +113,11 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="investment">Annual Service Investment (in thousands $) <span class="tooltip"><span class="info-icon">i</span>
-                            <span class="tooltiptext">Default values are used if left blank ($250K year 1, $275K year 2, $290K year 3)</span></span></label>
+                        <label for="investment">Annual Service Investment (in millions $) <span class="tooltip"><span class="info-icon">i</span>
+                            <span class="tooltiptext">Default values are used if left blank ($0.25M year 1, $0.275M year 2, $0.29M year 3)</span></span></label>
                         <div class="input-with-suffix">
-                            <input type="number" id="investment" placeholder="Optional (e.g., 250)">
-                            <span class="input-suffix">K</span>
+                            <input type="number" id="investment" placeholder="Optional (e.g., 0.25)" step="0.01">
+                            <span class="input-suffix">M</span>
                         </div>
                     </div>
                     
