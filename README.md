@@ -2,6 +2,10 @@
 
 An interactive web-based calculator that helps organizations evaluate the financial benefits and return on investment (ROI) of implementing sustainability rating services across their supply chain.
 
+## Live Demo
+
+You can access the live calculator at: [https://waelgara97.github.io/sustainability-roi-calculator/](https://waelgara97.github.io/sustainability-roi-calculator/)
+
 ## Overview
 
 This calculator uses industry-specific data to estimate the financial impact of sustainability initiatives across four key benefit categories:
@@ -69,6 +73,15 @@ No installation required! This is a client-side web application that can be serv
 2. Open `index.html` in your web browser
 
 Alternatively, you can deploy to any web hosting service that supports static websites.
+
+## Deployment
+
+This project is set up to automatically deploy to GitHub Pages. When changes are pushed to the main branch, a GitHub Actions workflow will deploy the updated calculator to the GitHub Pages site.
+
+To set up deployment for your own fork:
+1. Go to the repository settings
+2. Navigate to the "Pages" section in the sidebar
+3. Under "Build and deployment", select "Source: GitHub Actions"
 
 ## License
 
