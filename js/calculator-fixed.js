@@ -39,6 +39,14 @@ function calculateROI() {
     // Calculate scaled service investment based on revenue
     const serviceInvestment = calculateScaledInvestment(revenue, customInvestment);
     
+    // Debug output - remove in production
+    console.log("Service Investment:", {
+        year1: serviceInvestment.year1 / 1000000,
+        year2: serviceInvestment.year2 / 1000000,
+        year3: serviceInvestment.year3 / 1000000,
+        total: (serviceInvestment.year1 + serviceInvestment.year2 + serviceInvestment.year3) / 1000000
+    });
+    
     // Calculate procurement spend if not provided
     if (!procurementSpend) {
         procurementSpend = revenue * industry.procurementPercent;
@@ -135,19 +143,22 @@ function calculateScaledInvestment(revenue, customInvestment) {
     
     // Otherwise, calculate based on company size
     // Reference point: $50M company spends $250K
-    const referenceRevenue = 50000000;
-    const referenceInvestment = defaultServiceInvestment.year1 * 1000000; // Convert to actual dollars
+    const referenceRevenue = 50000000; // $50 million
+    const referenceInvestment = 250000; // $250,000
     
     // Calculate scaling factor - logarithmic scaling
-    // The formula gives a smooth curve that scales with company size
-    // Small companies get little increase, large companies get substantial but not proportional increase
-    const scalingFactor = Math.log10(revenue / referenceRevenue) / Math.log10(2) + 1;
-    const scalingMultiplier = Math.max(1, scalingFactor);
+    // This gives us a smooth curve that scales with company size
+    let scalingFactor = 1.0;
+    if (revenue > referenceRevenue) {
+        scalingFactor = 1.0 + Math.log10(revenue / referenceRevenue);
+    } else {
+        scalingFactor = Math.max(0.5, revenue / referenceRevenue);
+    }
     
-    // Calculate scaled investment based on scaling factor
-    const baseInvestment = referenceInvestment * scalingMultiplier;
+    // Calculate baseline investment with scaling
+    const baseInvestment = referenceInvestment * scalingFactor;
     
-    // Return yearly values with appropriate year-over-year increases
+    // Return yearly values in dollars (not millions)
     return {
         year1: baseInvestment,
         year2: baseInvestment * 1.1, // 10% increase year 2
@@ -184,7 +195,8 @@ function calculateYearlyBenefits(year, industry, maturity, revenue, procurementS
     const carbonValueImpact = supplyChainEmissionsInTons * carbonPrice * carbonReductionPercent;
     
     // Calculate risk mitigation value - scale based on company size
-    const baseRiskValue = riskValues[industry.riskLevel] * 1000000; // Convert from millions to actual dollars
+    // Convert risk values from millions to actual dollars
+    const baseRiskValue = riskValues[industry.riskLevel] * 1000000;
     
     // Apply improved revenue scaling with enhanced approach for high-revenue companies
     const revenueScale = calculateRiskRevenueScale(revenue);
@@ -237,23 +249,23 @@ function calculateYearlyBenefits(year, industry, maturity, revenue, procurementS
  * @returns {number} - Calculated revenue scale factor
  */
 function calculateRiskRevenueScale(revenue) {
-  // Base value for companies up to $100M
-  if (revenue <= 100000000) {
-    return Math.max(0.5, revenue / 100000000);
-  }
-  // Scale for companies between $100M and $1B
-  else if (revenue <= 1000000000) {
-    return 1.0 + (revenue - 100000000) / 900000000 * 1.5;
-  }
-  // Scale for companies between $1B and $10B - increased multiplier
-  else if (revenue <= 10000000000) {
-    return 2.5 + (revenue - 1000000000) / 9000000000 * 4.5;
-  }
-  // Scale for companies above $10B - significantly higher ceiling
-  else {
-    // Maximum value increased to 12 (from 10)
-    return 7.0 + Math.min((revenue - 10000000000) / 90000000000 * 5.0, 5.0);
-  }
+    // Base value for companies up to $100M
+    if (revenue <= 100000000) {
+        return Math.max(0.5, revenue / 100000000);
+    }
+    // Scale for companies between $100M and $1B
+    else if (revenue <= 1000000000) {
+        return 1.0 + (revenue - 100000000) / 900000000 * 1.5;
+    }
+    // Scale for companies between $1B and $10B - increased multiplier
+    else if (revenue <= 10000000000) {
+        return 2.5 + (revenue - 1000000000) / 9000000000 * 4.5;
+    }
+    // Scale for companies above $10B - significantly higher ceiling
+    else {
+        // Maximum value increased to 12 (from 10)
+        return 7.0 + Math.min((revenue - 10000000000) / 90000000000 * 5.0, 5.0);
+    }
 }
 
 /**
