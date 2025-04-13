@@ -159,6 +159,9 @@ function displayResults(results) {
             <div class="chart-tabs">
                 <button id="benefits-tab" class="chart-tab active">Benefits Breakdown</button>
                 <button id="cashflow-tab" class="chart-tab">Cumulative Cash Flow</button>
+                <button id="category-tab" class="chart-tab">Category Analysis</button>
+                <button id="yearly-tab" class="chart-tab">Yearly Comparison</button>
+                <button id="emissions-tab" class="chart-tab">Emissions Impact</button>
             </div>
             
             <div id="benefits-chart-container" class="chart-container">
@@ -167,6 +170,18 @@ function displayResults(results) {
             
             <div id="cashflow-chart-container" class="chart-container" style="display: none;">
                 <canvas id="cashFlowChart"></canvas>
+            </div>
+            
+            <div id="category-chart-container" class="chart-container" style="display: none;">
+                <canvas id="categoryChart"></canvas>
+            </div>
+            
+            <div id="yearly-chart-container" class="chart-container" style="display: none;">
+                <canvas id="yearlyChart"></canvas>
+            </div>
+            
+            <div id="emissions-chart-container" class="chart-container" style="display: none;">
+                <canvas id="emissionsChart"></canvas>
             </div>
         </div>
         
@@ -192,18 +207,47 @@ function displayResults(results) {
     
     // Add event listeners for the chart tabs and export button
     document.getElementById('benefits-tab').addEventListener('click', function() {
+        hideAllCharts();
         this.classList.add('active');
-        document.getElementById('cashflow-tab').classList.remove('active');
         document.getElementById('benefits-chart-container').style.display = 'block';
-        document.getElementById('cashflow-chart-container').style.display = 'none';
     });
     
     document.getElementById('cashflow-tab').addEventListener('click', function() {
+        hideAllCharts();
         this.classList.add('active');
-        document.getElementById('benefits-tab').classList.remove('active');
-        document.getElementById('benefits-chart-container').style.display = 'none';
         document.getElementById('cashflow-chart-container').style.display = 'block';
     });
+    
+    document.getElementById('category-tab').addEventListener('click', function() {
+        hideAllCharts();
+        this.classList.add('active');
+        document.getElementById('category-chart-container').style.display = 'block';
+    });
+    
+    document.getElementById('yearly-tab').addEventListener('click', function() {
+        hideAllCharts();
+        this.classList.add('active');
+        document.getElementById('yearly-chart-container').style.display = 'block';
+    });
+    
+    document.getElementById('emissions-tab').addEventListener('click', function() {
+        hideAllCharts();
+        this.classList.add('active');
+        document.getElementById('emissions-chart-container').style.display = 'block';
+    });
+    
+    // Helper function to hide all charts and remove active class from tabs
+    function hideAllCharts() {
+        // Hide all chart containers
+        document.querySelectorAll('.chart-container').forEach(container => {
+            container.style.display = 'none';
+        });
+        
+        // Remove active class from all tabs
+        document.querySelectorAll('.chart-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+    }
     
     // Set up PDF export functionality
     document.getElementById('export-btn').addEventListener('click', function() {
@@ -225,7 +269,9 @@ function displayResults(results) {
     // Create charts
     createCharts({
         benefits: results.benefits,
-        serviceInvestment: results.serviceInvestment
+        serviceInvestment: results.serviceInvestment,
+        supplyChainEmissions: results.supplyChainEmissions,
+        carbonPrice: parseFloat(document.getElementById('carbon-price').value)
     });
 }
 
@@ -390,6 +436,272 @@ function createCharts(data) {
                     title: {
                         display: true,
                         text: 'USD'
+                    }
+                }
+            }
+        }
+    });
+    
+    // Category Analysis Chart (Pie Chart)
+    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+    
+    // Calculate totals for each category across all 3 years
+    const totalProcurement = data.benefits.year1.procurementSavings + 
+                            data.benefits.year2.procurementSavings + 
+                            data.benefits.year3.procurementSavings;
+                            
+    const totalCarbon = data.benefits.year1.carbonValueImpact + 
+                        data.benefits.year2.carbonValueImpact + 
+                        data.benefits.year3.carbonValueImpact;
+                        
+    const totalRisk = data.benefits.year1.riskMitigationValue + 
+                    data.benefits.year2.riskMitigationValue + 
+                    data.benefits.year3.riskMitigationValue;
+                    
+    const totalBrand = data.benefits.year1.brandValueImpact + 
+                      data.benefits.year2.brandValueImpact + 
+                      data.benefits.year3.brandValueImpact;
+    
+    new Chart(categoryCtx, {
+        type: 'pie',
+        data: {
+            labels: [
+                'Procurement Cost Savings', 
+                'Carbon Value Impact', 
+                'Risk Mitigation Value', 
+                'Brand Value / Market Access'
+            ],
+            datasets: [{
+                data: [totalProcurement, totalCarbon, totalRisk, totalBrand],
+                backgroundColor: ['#4eb38f', '#0e7c61', '#ffc107', '#6c757d'],
+                borderWidth: 1,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Total Benefits by Category (3-Year Period)',
+                    font: {
+                        size: 16
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.parsed || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((value * 100) / total);
+                            return `${label}: ${formatter.format(value)} (${percentage}%)`;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'right'
+                }
+            }
+        }
+    });
+    
+    // Yearly Comparison Chart (Line)
+    const yearlyCtx = document.getElementById('yearlyChart').getContext('2d');
+    
+    new Chart(yearlyCtx, {
+        type: 'line',
+        data: {
+            labels: ['Year 1', 'Year 2', 'Year 3'],
+            datasets: [
+                {
+                    label: 'Benefits',
+                    data: [
+                        data.benefits.year1.total,
+                        data.benefits.year2.total,
+                        data.benefits.year3.total
+                    ],
+                    borderColor: '#4eb38f',
+                    backgroundColor: 'rgba(78, 179, 143, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.1
+                },
+                {
+                    label: 'Investment',
+                    data: [
+                        data.serviceInvestment.year1,
+                        data.serviceInvestment.year2,
+                        data.serviceInvestment.year3
+                    ],
+                    borderColor: '#6c757d',
+                    backgroundColor: 'rgba(108, 117, 125, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.1
+                },
+                {
+                    label: 'Net Benefit',
+                    data: [
+                        data.benefits.year1.total - data.serviceInvestment.year1,
+                        data.benefits.year2.total - data.serviceInvestment.year2,
+                        data.benefits.year3.total - data.serviceInvestment.year3
+                    ],
+                    borderColor: '#0e7c61',
+                    backgroundColor: 'rgba(14, 124, 97, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.1,
+                    borderDash: [5, 5]
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Yearly Benefits, Investment, and Net Benefit',
+                    font: {
+                        size: 16
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += formatter.format(context.parsed.y);
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        callback: function(value) {
+                            return formatter.format(value);
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'USD'
+                    }
+                }
+            }
+        }
+    });
+    
+    // Emissions Impact Chart 
+    const emissionsCtx = document.getElementById('emissionsChart').getContext('2d');
+    
+    // Calculate emission reductions
+    const carbonReduction = {
+        year1: 0.15,
+        year2: 0.195,
+        year3: 0.254
+    };
+    
+    // Convert kg to metric tons
+    const emissionsInTons = data.supplyChainEmissions / 1000;
+    
+    const baselineEmissions = [emissionsInTons, emissionsInTons, emissionsInTons];
+    const reducedEmissions = [
+        emissionsInTons * (1 - carbonReduction.year1),
+        emissionsInTons * (1 - carbonReduction.year2),
+        emissionsInTons * (1 - carbonReduction.year3)
+    ];
+    
+    const emissionsSavings = [
+        emissionsInTons * carbonReduction.year1,
+        emissionsInTons * carbonReduction.year2,
+        emissionsInTons * carbonReduction.year3
+    ];
+    
+    new Chart(emissionsCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Year 1', 'Year 2', 'Year 3'],
+            datasets: [
+                {
+                    label: 'Baseline Emissions',
+                    data: baselineEmissions,
+                    backgroundColor: 'rgba(108, 117, 125, 0.2)', // Light gray
+                    borderColor: 'rgba(108, 117, 125, 1)',
+                    borderWidth: 1,
+                    type: 'line',
+                    fill: false,
+                    tension: 0.1,
+                    pointRadius: 0,
+                    borderDash: [5, 5]
+                },
+                {
+                    label: 'Emissions After Reduction',
+                    data: reducedEmissions,
+                    backgroundColor: '#4eb38f', // Green
+                    borderColor: '#4eb38f',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Emissions Savings',
+                    data: emissionsSavings,
+                    backgroundColor: '#0e7c61', // Dark green
+                    borderColor: '#0e7c61',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Carbon Emissions Impact (Metric Tons CO2e)',
+                    font: {
+                        size: 16
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                const value = context.parsed.y;
+                                label += `${Math.round(value).toLocaleString()} tCO2e`;
+                                
+                                // Add carbon price value for emissions savings
+                                if (context.datasetIndex === 2) {
+                                    const carbonValue = value * data.carbonPrice;
+                                    label += ` (${formatter.format(carbonValue)})`;
+                                }
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: true,
+                    ticks: {
+                        callback: function(value) {
+                            return Math.round(value).toLocaleString() + ' tCO2e';
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Metric Tons CO2e'
                     }
                 }
             }
