@@ -72,14 +72,12 @@ function generatePDF(companyData, benefits, investment) {
     doc.text('Year 3', 145, 120);
     doc.text('Total', 175, 120);
     
-    // Format numbers in compact notation (K, M, B)
+    // Format numbers as full dollar amounts
     const formatCurrency = (number) => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
-            notation: 'compact',
-            compactDisplay: 'short',
-            maximumFractionDigits: 1
+            maximumFractionDigits: 0
         }).format(number);
     };
     
