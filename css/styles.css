@@ -453,3 +453,37 @@ tr:hover {
         margin-top: 10px;
     }
 }
+/* Input with suffix styling */
+.input-with-suffix {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-suffix input {
+    width: calc(100% - 30px);
+    padding-right: 40px;
+}
+
+.input-suffix {
+    position: absolute;
+    right: 12px;
+    color: #6c757d;
+    font-weight: 500;
+    pointer-events: none;
+}
+
+/* Improved form layout */
+.form-group .helper-text {
+    display: block;
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 4px;
+}
+
+/* Better input number controls */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    opacity: 1;
+    height: 30px;
+}
