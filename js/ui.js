@@ -39,152 +39,166 @@ function displayResults(results) {
         recommendations = `<strong>Limited Business Case:</strong> With the current parameters, your ROI is below 1.0x. Consider focusing on specific high-value areas like ${getTopBenefitArea(results)}, adjusting your implementation timeline, or investigating industry-specific sustainability programs with lower initial costs. Reassess as your sustainability maturity increases.`;
     }
     
-    // Generate HTML for results display
+    // Generate HTML for results display with tabs for different ROI views
     const html = `
-        <div class="results-summary">
-            <h3>Financial Summary</h3>
-            <div class="metric" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <div style="width: 60%;">
-                    <span class="metric-name" style="font-size: 18px; font-weight: bold;">3-Year ROI Ratio:</span>
-                    <div style="font-size: 36px; font-weight: bold; color: ${roiColor};">${results.roiRatio.toFixed(2)}x</div>
-                    <span style="font-size: 14px; color: #666;">Return per dollar invested</span>
+        <div class="roi-tabs">
+            <div class="roi-tab-navigation">
+                <button id="overall-roi-tab" class="roi-tab active">Overall ROI</button>
+                <button id="procurement-roi-tab" class="roi-tab">Procurement ROI</button>
+            </div>
+            
+            <div id="overall-roi-container" class="roi-tab-content">
+                <div class="results-summary">
+                    <h3>Financial Summary</h3>
+                    <div class="metric" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div style="width: 60%;">
+                            <span class="metric-name" style="font-size: 18px; font-weight: bold;">3-Year ROI Ratio:</span>
+                            <div style="font-size: 36px; font-weight: bold; color: ${roiColor};">${results.roiRatio.toFixed(2)}x</div>
+                            <span style="font-size: 14px; color: #666;">Return per dollar invested</span>
+                        </div>
+                        <div style="width: 40%; text-align: right;">
+                            <div class="metric">
+                                <span class="metric-name">Net Benefits:</span>
+                                <span class="metric-value">${formatMillions(results.netBenefits)}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-name">Payback Period:</span>
+                                <span class="metric-value">${results.paybackMonths} months</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-name">NPV (10% discount):</span>
+                                <span class="metric-value">${formatMillions(results.npv)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background-color: #f5f5f5; padding: 10px; border-radius: 4px;">
+                        <p style="margin: 0;"><strong>Industry:</strong> ${results.industry.name} | <strong>Maturity Level:</strong> ${document.getElementById('maturity').value.charAt(0).toUpperCase() + document.getElementById('maturity').value.slice(1)}</p>
+                    </div>
                 </div>
-                <div style="width: 40%; text-align: right;">
-                    <div class="metric">
-                        <span class="metric-name">Net Benefits:</span>
-                        <span class="metric-value">${formatMillions(results.netBenefits)}</span>
+                
+                <div class="benefits-table">
+                    <h3>Benefits Breakdown</h3>
+                    <p style="margin-bottom: 15px;">Summary of financial benefits by category over the 3-year period (in millions)</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Benefit Category</th>
+                                <th>Year 1</th>
+                                <th>Year 2</th>
+                                <th>Year 3</th>
+                                <th>3-Year Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Procurement Cost Savings</td>
+                                <td>${formatMillions(results.benefits.year1.procurementSavings)}</td>
+                                <td>${formatMillions(results.benefits.year2.procurementSavings)}</td>
+                                <td>${formatMillions(results.benefits.year3.procurementSavings)}</td>
+                                <td>${formatMillions(
+                                    results.benefits.year1.procurementSavings + 
+                                    results.benefits.year2.procurementSavings + 
+                                    results.benefits.year3.procurementSavings
+                                )}</td>
+                            </tr>
+                            <tr>
+                                <td>Carbon Value Impact</td>
+                                <td>${formatMillions(results.benefits.year1.carbonValueImpact)}</td>
+                                <td>${formatMillions(results.benefits.year2.carbonValueImpact)}</td>
+                                <td>${formatMillions(results.benefits.year3.carbonValueImpact)}</td>
+                                <td>${formatMillions(
+                                    results.benefits.year1.carbonValueImpact + 
+                                    results.benefits.year2.carbonValueImpact + 
+                                    results.benefits.year3.carbonValueImpact
+                                )}</td>
+                            </tr>
+                            <tr>
+                                <td>Risk Mitigation Value</td>
+                                <td>${formatMillions(results.benefits.year1.riskMitigationValue)}</td>
+                                <td>${formatMillions(results.benefits.year2.riskMitigationValue)}</td>
+                                <td>${formatMillions(results.benefits.year3.riskMitigationValue)}</td>
+                                <td>${formatMillions(
+                                    results.benefits.year1.riskMitigationValue + 
+                                    results.benefits.year2.riskMitigationValue + 
+                                    results.benefits.year3.riskMitigationValue
+                                )}</td>
+                            </tr>
+                            <tr>
+                                <td>Brand Value / Market Access</td>
+                                <td>${formatMillions(results.benefits.year1.brandValueImpact)}</td>
+                                <td>${formatMillions(results.benefits.year2.brandValueImpact)}</td>
+                                <td>${formatMillions(results.benefits.year3.brandValueImpact)}</td>
+                                <td>${formatMillions(
+                                    results.benefits.year1.brandValueImpact + 
+                                    results.benefits.year2.brandValueImpact + 
+                                    results.benefits.year3.brandValueImpact
+                                )}</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>Total Benefits</td>
+                                <td>${formatMillions(results.benefits.year1.total)}</td>
+                                <td>${formatMillions(results.benefits.year2.total)}</td>
+                                <td>${formatMillions(results.benefits.year3.total)}</td>
+                                <td>${formatMillions(
+                                    results.benefits.year1.total + 
+                                    results.benefits.year2.total + 
+                                    results.benefits.year3.total
+                                )}</td>
+                            </tr>
+                            <tr>
+                                <td>Investment Cost</td>
+                                <td>${formatMillions(results.serviceInvestment.year1)}</td>
+                                <td>${formatMillions(results.serviceInvestment.year2)}</td>
+                                <td>${formatMillions(results.serviceInvestment.year3)}</td>
+                                <td>${formatMillions(
+                                    results.serviceInvestment.year1 + 
+                                    results.serviceInvestment.year2 + 
+                                    results.serviceInvestment.year3
+                                )}</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>Net Benefits</td>
+                                <td>${formatMillions(results.benefits.year1.total - results.serviceInvestment.year1)}</td>
+                                <td>${formatMillions(results.benefits.year2.total - results.serviceInvestment.year2)}</td>
+                                <td>${formatMillions(results.benefits.year3.total - results.serviceInvestment.year3)}</td>
+                                <td>${formatMillions(results.netBenefits)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div>
+                    <h3>Visualizations</h3>
+                    <div class="chart-tabs">
+                        <button id="benefits-tab" class="chart-tab active">Benefits Breakdown</button>
+                        <button id="cashflow-tab" class="chart-tab">Cumulative Cash Flow</button>
+                        <button id="emissions-tab" class="chart-tab">Emissions Impact</button>
+                        <a href="methodology.html" class="chart-tab methodology-link" target="_blank">Calculation Methodology</a>
                     </div>
-                    <div class="metric">
-                        <span class="metric-name">Payback Period:</span>
-                        <span class="metric-value">${results.paybackMonths} months</span>
+                    
+                    <div id="benefits-chart-container" class="chart-container">
+                        <canvas id="benefitsChart"></canvas>
                     </div>
-                    <div class="metric">
-                        <span class="metric-name">NPV (10% discount):</span>
-                        <span class="metric-value">${formatMillions(results.npv)}</span>
+                    
+                    <div id="cashflow-chart-container" class="chart-container" style="display: none;">
+                        <canvas id="cashFlowChart"></canvas>
+                    </div>
+                    
+                    <div id="emissions-chart-container" class="chart-container" style="display: none;">
+                        <canvas id="emissionsChart"></canvas>
                     </div>
                 </div>
-            </div>
-            <div style="background-color: #f5f5f5; padding: 10px; border-radius: 4px;">
-                <p style="margin: 0;"><strong>Industry:</strong> ${results.industry.name} | <strong>Maturity Level:</strong> ${document.getElementById('maturity').value.charAt(0).toUpperCase() + document.getElementById('maturity').value.slice(1)}</p>
-            </div>
-        </div>
-        
-        <div class="benefits-table">
-            <h3>Benefits Breakdown</h3>
-            <p style="margin-bottom: 15px;">Summary of financial benefits by category over the 3-year period (in millions)</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Benefit Category</th>
-                        <th>Year 1</th>
-                        <th>Year 2</th>
-                        <th>Year 3</th>
-                        <th>3-Year Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Procurement Cost Savings</td>
-                        <td>${formatMillions(results.benefits.year1.procurementSavings)}</td>
-                        <td>${formatMillions(results.benefits.year2.procurementSavings)}</td>
-                        <td>${formatMillions(results.benefits.year3.procurementSavings)}</td>
-                        <td>${formatMillions(
-                            results.benefits.year1.procurementSavings + 
-                            results.benefits.year2.procurementSavings + 
-                            results.benefits.year3.procurementSavings
-                        )}</td>
-                    </tr>
-                    <tr>
-                        <td>Carbon Value Impact</td>
-                        <td>${formatMillions(results.benefits.year1.carbonValueImpact)}</td>
-                        <td>${formatMillions(results.benefits.year2.carbonValueImpact)}</td>
-                        <td>${formatMillions(results.benefits.year3.carbonValueImpact)}</td>
-                        <td>${formatMillions(
-                            results.benefits.year1.carbonValueImpact + 
-                            results.benefits.year2.carbonValueImpact + 
-                            results.benefits.year3.carbonValueImpact
-                        )}</td>
-                    </tr>
-                    <tr>
-                        <td>Risk Mitigation Value</td>
-                        <td>${formatMillions(results.benefits.year1.riskMitigationValue)}</td>
-                        <td>${formatMillions(results.benefits.year2.riskMitigationValue)}</td>
-                        <td>${formatMillions(results.benefits.year3.riskMitigationValue)}</td>
-                        <td>${formatMillions(
-                            results.benefits.year1.riskMitigationValue + 
-                            results.benefits.year2.riskMitigationValue + 
-                            results.benefits.year3.riskMitigationValue
-                        )}</td>
-                    </tr>
-                    <tr>
-                        <td>Brand Value / Market Access</td>
-                        <td>${formatMillions(results.benefits.year1.brandValueImpact)}</td>
-                        <td>${formatMillions(results.benefits.year2.brandValueImpact)}</td>
-                        <td>${formatMillions(results.benefits.year3.brandValueImpact)}</td>
-                        <td>${formatMillions(
-                            results.benefits.year1.brandValueImpact + 
-                            results.benefits.year2.brandValueImpact + 
-                            results.benefits.year3.brandValueImpact
-                        )}</td>
-                    </tr>
-                    <tr class="total-row">
-                        <td>Total Benefits</td>
-                        <td>${formatMillions(results.benefits.year1.total)}</td>
-                        <td>${formatMillions(results.benefits.year2.total)}</td>
-                        <td>${formatMillions(results.benefits.year3.total)}</td>
-                        <td>${formatMillions(
-                            results.benefits.year1.total + 
-                            results.benefits.year2.total + 
-                            results.benefits.year3.total
-                        )}</td>
-                    </tr>
-                    <tr>
-                        <td>Investment Cost</td>
-                        <td>${formatMillions(results.serviceInvestment.year1)}</td>
-                        <td>${formatMillions(results.serviceInvestment.year2)}</td>
-                        <td>${formatMillions(results.serviceInvestment.year3)}</td>
-                        <td>${formatMillions(
-                            results.serviceInvestment.year1 + 
-                            results.serviceInvestment.year2 + 
-                            results.serviceInvestment.year3
-                        )}</td>
-                    </tr>
-                    <tr class="total-row">
-                        <td>Net Benefits</td>
-                        <td>${formatMillions(results.benefits.year1.total - results.serviceInvestment.year1)}</td>
-                        <td>${formatMillions(results.benefits.year2.total - results.serviceInvestment.year2)}</td>
-                        <td>${formatMillions(results.benefits.year3.total - results.serviceInvestment.year3)}</td>
-                        <td>${formatMillions(results.netBenefits)}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        
-        <div>
-            <h3>Visualizations</h3>
-            <div class="chart-tabs">
-                <button id="benefits-tab" class="chart-tab active">Benefits Breakdown</button>
-                <button id="cashflow-tab" class="chart-tab">Cumulative Cash Flow</button>
-                <button id="emissions-tab" class="chart-tab">Emissions Impact</button>
-                <a href="methodology.html" class="chart-tab methodology-link" target="_blank">Calculation Methodology</a>
+                
+                <div style="margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
+                    <h3>Recommendations</h3>
+                    <p id="recommendations">${recommendations}</p>
+                </div>
             </div>
             
-            <div id="benefits-chart-container" class="chart-container">
-                <canvas id="benefitsChart"></canvas>
+            <div id="procurement-roi-container" class="roi-tab-content" style="display: none;">
+                <!-- This will be populated by the procurement ROI calculator -->
+                <p>Loading procurement-specific ROI analysis...</p>
             </div>
-            
-            <div id="cashflow-chart-container" class="chart-container" style="display: none;">
-                <canvas id="cashFlowChart"></canvas>
-            </div>
-            
-            <div id="emissions-chart-container" class="chart-container" style="display: none;">
-                <canvas id="emissionsChart"></canvas>
-            </div>
-        </div>
-        
-        <div style="margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
-            <h3>Recommendations</h3>
-            <p id="recommendations">${recommendations}</p>
         </div>
         
         <div style="margin-top: 20px; text-align: right;">
@@ -201,6 +215,24 @@ function displayResults(results) {
     `;
     
     resultsContainer.innerHTML = html;
+    
+    // Set up ROI tab functionality
+    document.getElementById('overall-roi-tab').addEventListener('click', function() {
+        document.getElementById('overall-roi-container').style.display = 'block';
+        document.getElementById('procurement-roi-container').style.display = 'none';
+        this.classList.add('active');
+        document.getElementById('procurement-roi-tab').classList.remove('active');
+    });
+    
+    document.getElementById('procurement-roi-tab').addEventListener('click', function() {
+        document.getElementById('overall-roi-container').style.display = 'none';
+        document.getElementById('procurement-roi-container').style.display = 'block';
+        this.classList.add('active');
+        document.getElementById('overall-roi-tab').classList.remove('active');
+        
+        // Display procurement ROI analysis
+        displayProcurementROI(results);
+    });
     
     // Add event listeners for the chart tabs and export button
     document.getElementById('benefits-tab').addEventListener('click', function() {
@@ -236,19 +268,27 @@ function displayResults(results) {
     
     // Set up PDF export functionality
     document.getElementById('export-btn').addEventListener('click', function() {
-        // Prepare data for PDF export
-        const companyData = {
-            industry: results.industry.name,
-            revenue: formatMillions(results.revenue),
-            maturity: document.getElementById('maturity').value.charAt(0).toUpperCase() + document.getElementById('maturity').value.slice(1),
-            roiRatio: results.roiRatio.toFixed(2),
-            netBenefits: formatMillions(results.netBenefits),
-            paybackMonths: results.paybackMonths,
-            npv: formatMillions(results.npv)
-        };
+        // Check which tab is active
+        const isProcurementTab = document.getElementById('procurement-roi-tab').classList.contains('active');
         
-        // Generate PDF
-        generatePDF(companyData, results.benefits, results.serviceInvestment);
+        if (isProcurementTab) {
+            // Export procurement-specific PDF
+            exportProcurementROIPDF(results);
+        } else {
+            // Prepare data for overall ROI PDF export
+            const companyData = {
+                industry: results.industry.name,
+                revenue: formatMillions(results.revenue),
+                maturity: document.getElementById('maturity').value.charAt(0).toUpperCase() + document.getElementById('maturity').value.slice(1),
+                roiRatio: results.roiRatio.toFixed(2),
+                netBenefits: formatMillions(results.netBenefits),
+                paybackMonths: results.paybackMonths,
+                npv: formatMillions(results.npv)
+            };
+            
+            // Generate PDF
+            generatePDF(companyData, results.benefits, results.serviceInvestment);
+        }
     });
     
     // Create charts with values in millions
@@ -758,4 +798,161 @@ function loadScenario(scenario) {
     
     // Scroll to top of form
     document.getElementById('roi-form').scrollIntoView({ behavior: 'smooth' });
+}
+
+/**
+ * Export procurement-specific ROI data to PDF
+ * This function is called when exporting PDF from the procurement ROI tab
+ * @param {object} results - The calculation results
+ */
+function exportProcurementROIPDF(results) {
+    const { jsPDF } = window.jspdf;
+    
+    // Create new PDF document
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
+    
+    // Calculate procurement-specific ROI data
+    const procurementROI = calculateProcurementROI(results);
+    
+    // Format values in millions
+    const formatMillions = (value) => {
+        const inMillions = value / 1000000;
+        return `$${inMillions.toFixed(2)}M`;
+    };
+    
+    // Add header
+    doc.setDrawColor(14, 124, 97);
+    doc.setFillColor(14, 124, 97);
+    doc.roundedRect(20, 10, 30, 5, 2, 2, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(10);
+    doc.text('SUSTAINABILITY', 35, 14, { align: 'center' });
+    
+    // Set title
+    doc.setFontSize(20);
+    doc.setTextColor(14, 124, 97);
+    doc.text('Procurement-Specific ROI Report', pageWidth / 2, 25, { align: 'center' });
+    
+    // Add company details
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Industry: ${results.industry.name}`, 20, 40);
+    doc.text(`Annual Revenue: ${formatMillions(results.revenue)}`, 20, 47);
+    doc.text(`Procurement Budget: ${formatMillions(procurementROI.procurementBudget)}`, 20, 54);
+    doc.text(`Procurement Team Size: ${procurementROI.procurementTeamSize} staff`, 20, 61);
+    
+    // Add ROI summary
+    doc.setFillColor(245, 245, 245);
+    doc.rect(20, 70, pageWidth - 40, 25, 'F');
+    
+    doc.setFontSize(14);
+    doc.setTextColor(14, 124, 97);
+    doc.text('Procurement ROI Summary', pageWidth / 2, 78, { align: 'center' });
+    
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Procurement-Specific ROI: ${procurementROI.procurementROIRatio.toFixed(2)}x`, 30, 85);
+    doc.text(`Budget Impact: ${procurementROI.budgetImpactPercent.toFixed(1)}% increase`, 30, 92);
+    
+    // Add benefits breakdown table
+    doc.setFontSize(14);
+    doc.setTextColor(14, 124, 97);
+    doc.text('Budget Impact Breakdown (in millions)', pageWidth / 2, 110, { align: 'center' });
+    
+    // Table headers
+    doc.setFillColor(230, 230, 230);
+    doc.rect(20, 115, pageWidth - 40, 8, 'F');
+    
+    doc.setFontSize(10);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont(undefined, 'bold');
+    doc.text('Benefit Category', 25, 120);
+    doc.text('Year 1', 85, 120);
+    doc.text('Year 2', 115, 120);
+    doc.text('Year 3', 145, 120);
+    doc.text('Total', 175, 120);
+    
+    // Table rows
+    doc.setFont(undefined, 'normal');
+    let yPosition = 130;
+    
+    // Direct Cost Savings
+    doc.text('Direct Cost Savings', 25, yPosition);
+    doc.text(formatMillions(procurementROI.directSavings.year1), 85, yPosition);
+    doc.text(formatMillions(procurementROI.directSavings.year2), 115, yPosition);
+    doc.text(formatMillions(procurementROI.directSavings.year3), 145, yPosition);
+    doc.text(formatMillions(procurementROI.directSavings.total), 175, yPosition);
+    
+    yPosition += 10;
+    
+    // Budget Allocation
+    doc.text(`Budget Allocation (${(procurementROI.savingsAllocationPercent * 100).toFixed(0)}%)`, 25, yPosition);
+    doc.text(formatMillions(procurementROI.budgetEnhancement.year1), 85, yPosition);
+    doc.text(formatMillions(procurementROI.budgetEnhancement.year2), 115, yPosition);
+    doc.text(formatMillions(procurementROI.budgetEnhancement.year3), 145, yPosition);
+    doc.text(formatMillions(procurementROI.budgetEnhancement.total), 175, yPosition);
+    
+    yPosition += 10;
+    
+    // Productivity Savings
+    doc.text('Productivity Improvements', 25, yPosition);
+    doc.text(formatMillions(procurementROI.productivitySavings.year1), 85, yPosition);
+    doc.text(formatMillions(procurementROI.productivitySavings.year2), 115, yPosition);
+    doc.text(formatMillions(procurementROI.productivitySavings.year3), 145, yPosition);
+    doc.text(formatMillions(procurementROI.productivitySavings.total), 175, yPosition);
+    
+    yPosition += 10;
+    
+    // Total Benefits
+    doc.setFillColor(240, 240, 240);
+    doc.rect(20, yPosition - 5, pageWidth - 40, 8, 'F');
+    doc.setFont(undefined, 'bold');
+    
+    doc.text('Total Procurement Benefits', 25, yPosition);
+    doc.text(formatMillions(procurementROI.totalProcurementBenefits.year1), 85, yPosition);
+    doc.text(formatMillions(procurementROI.totalProcurementBenefits.year2), 115, yPosition);
+    doc.text(formatMillions(procurementROI.totalProcurementBenefits.year3), 145, yPosition);
+    doc.text(formatMillions(procurementROI.totalProcurementBenefits.total), 175, yPosition);
+    
+    yPosition += 10;
+    
+    // Investment Cost
+    doc.setFont(undefined, 'normal');
+    doc.text('Investment Cost', 25, yPosition);
+    doc.text(formatMillions(procurementROI.investment.year1), 85, yPosition);
+    doc.text(formatMillions(procurementROI.investment.year2), 115, yPosition);
+    doc.text(formatMillions(procurementROI.investment.year3), 145, yPosition);
+    doc.text(formatMillions(procurementROI.investment.total), 175, yPosition);
+    
+    // Add explanation and recommendations
+    yPosition += 25;
+    doc.setFontSize(14);
+    doc.setTextColor(14, 124, 97);
+    doc.text('Budget Impact Analysis', pageWidth / 2, yPosition, { align: 'center' });
+    
+    yPosition += 10;
+    doc.setFontSize(10);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont(undefined, 'normal');
+    
+    const explanation = `This analysis shows how the sustainability rating services investment impacts the procurement department's budget specifically. With a ${procurementROI.procurementROIRatio.toFixed(2)}x procurement-specific ROI, the initiative provides a significant return on investment for the procurement function alone.
+
+The 3-year net budget enhancement represents ${procurementROI.budgetImpactPercent.toFixed(1)}% of the procurement department's budget over the same period. This additional budget can be reinvested into additional headcount, technology upgrades, staff training, or additional sustainability initiatives.
+
+The analysis accounts for direct cost savings that can be allocated back to the procurement budget (${(procurementROI.savingsAllocationPercent * 100).toFixed(0)}% allocation assumed) and productivity improvements for the procurement team (estimated at 5 hours saved per month per staff member).`;
+    
+    const splitExplanation = doc.splitTextToSize(explanation, pageWidth - 40);
+    doc.text(splitExplanation, 20, yPosition);
+    
+    // Add footer
+    const footerY = doc.internal.pageSize.getHeight() - 20;
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.setTextColor(100, 100, 100);
+    doc.text('Generated by the Sustainability Rating Services ROI Calculator', pageWidth / 2, footerY, { align: 'center' });
+    doc.text(`${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, pageWidth / 2, footerY + 5, { align: 'center' });
+    
+    // Save the PDF
+    doc.save('Procurement_ROI_Report.pdf');
 }
