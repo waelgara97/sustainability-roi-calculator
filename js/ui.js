@@ -10,6 +10,12 @@
 function displayResults(results) {
     const resultsContainer = document.getElementById('results-container');
     
+    // Format values in millions
+    const formatMillions = (value) => {
+        const inMillions = value / 1000000;
+        return `$${inMillions.toFixed(2)}M`;
+    };
+    
     // Determine color based on ROI value
     const getMetricColor = (roi) => {
         if (roi >= 3) return "#0e7c61"; // Excellent - green
@@ -46,7 +52,7 @@ function displayResults(results) {
                 <div style="width: 40%; text-align: right;">
                     <div class="metric">
                         <span class="metric-name">Net Benefits:</span>
-                        <span class="metric-value">${formatter.format(results.netBenefits)}</span>
+                        <span class="metric-value">${formatMillions(results.netBenefits)}</span>
                     </div>
                     <div class="metric">
                         <span class="metric-name">Payback Period:</span>
@@ -54,7 +60,7 @@ function displayResults(results) {
                     </div>
                     <div class="metric">
                         <span class="metric-name">NPV (10% discount):</span>
-                        <span class="metric-value">${formatter.format(results.npv)}</span>
+                        <span class="metric-value">${formatMillions(results.npv)}</span>
                     </div>
                 </div>
             </div>
@@ -65,7 +71,7 @@ function displayResults(results) {
         
         <div class="benefits-table">
             <h3>Benefits Breakdown</h3>
-            <p style="margin-bottom: 15px;">Summary of financial benefits by category over the 3-year period</p>
+            <p style="margin-bottom: 15px;">Summary of financial benefits by category over the 3-year period (in millions)</p>
             <table>
                 <thead>
                     <tr>
@@ -79,10 +85,10 @@ function displayResults(results) {
                 <tbody>
                     <tr>
                         <td>Procurement Cost Savings</td>
-                        <td>${formatter.format(results.benefits.year1.procurementSavings)}</td>
-                        <td>${formatter.format(results.benefits.year2.procurementSavings)}</td>
-                        <td>${formatter.format(results.benefits.year3.procurementSavings)}</td>
-                        <td>${formatter.format(
+                        <td>${formatMillions(results.benefits.year1.procurementSavings)}</td>
+                        <td>${formatMillions(results.benefits.year2.procurementSavings)}</td>
+                        <td>${formatMillions(results.benefits.year3.procurementSavings)}</td>
+                        <td>${formatMillions(
                             results.benefits.year1.procurementSavings + 
                             results.benefits.year2.procurementSavings + 
                             results.benefits.year3.procurementSavings
@@ -90,10 +96,10 @@ function displayResults(results) {
                     </tr>
                     <tr>
                         <td>Carbon Value Impact</td>
-                        <td>${formatter.format(results.benefits.year1.carbonValueImpact)}</td>
-                        <td>${formatter.format(results.benefits.year2.carbonValueImpact)}</td>
-                        <td>${formatter.format(results.benefits.year3.carbonValueImpact)}</td>
-                        <td>${formatter.format(
+                        <td>${formatMillions(results.benefits.year1.carbonValueImpact)}</td>
+                        <td>${formatMillions(results.benefits.year2.carbonValueImpact)}</td>
+                        <td>${formatMillions(results.benefits.year3.carbonValueImpact)}</td>
+                        <td>${formatMillions(
                             results.benefits.year1.carbonValueImpact + 
                             results.benefits.year2.carbonValueImpact + 
                             results.benefits.year3.carbonValueImpact
@@ -101,10 +107,10 @@ function displayResults(results) {
                     </tr>
                     <tr>
                         <td>Risk Mitigation Value</td>
-                        <td>${formatter.format(results.benefits.year1.riskMitigationValue)}</td>
-                        <td>${formatter.format(results.benefits.year2.riskMitigationValue)}</td>
-                        <td>${formatter.format(results.benefits.year3.riskMitigationValue)}</td>
-                        <td>${formatter.format(
+                        <td>${formatMillions(results.benefits.year1.riskMitigationValue)}</td>
+                        <td>${formatMillions(results.benefits.year2.riskMitigationValue)}</td>
+                        <td>${formatMillions(results.benefits.year3.riskMitigationValue)}</td>
+                        <td>${formatMillions(
                             results.benefits.year1.riskMitigationValue + 
                             results.benefits.year2.riskMitigationValue + 
                             results.benefits.year3.riskMitigationValue
@@ -112,10 +118,10 @@ function displayResults(results) {
                     </tr>
                     <tr>
                         <td>Brand Value / Market Access</td>
-                        <td>${formatter.format(results.benefits.year1.brandValueImpact)}</td>
-                        <td>${formatter.format(results.benefits.year2.brandValueImpact)}</td>
-                        <td>${formatter.format(results.benefits.year3.brandValueImpact)}</td>
-                        <td>${formatter.format(
+                        <td>${formatMillions(results.benefits.year1.brandValueImpact)}</td>
+                        <td>${formatMillions(results.benefits.year2.brandValueImpact)}</td>
+                        <td>${formatMillions(results.benefits.year3.brandValueImpact)}</td>
+                        <td>${formatMillions(
                             results.benefits.year1.brandValueImpact + 
                             results.benefits.year2.brandValueImpact + 
                             results.benefits.year3.brandValueImpact
@@ -123,10 +129,10 @@ function displayResults(results) {
                     </tr>
                     <tr class="total-row">
                         <td>Total Benefits</td>
-                        <td>${formatter.format(results.benefits.year1.total)}</td>
-                        <td>${formatter.format(results.benefits.year2.total)}</td>
-                        <td>${formatter.format(results.benefits.year3.total)}</td>
-                        <td>${formatter.format(
+                        <td>${formatMillions(results.benefits.year1.total)}</td>
+                        <td>${formatMillions(results.benefits.year2.total)}</td>
+                        <td>${formatMillions(results.benefits.year3.total)}</td>
+                        <td>${formatMillions(
                             results.benefits.year1.total + 
                             results.benefits.year2.total + 
                             results.benefits.year3.total
@@ -134,10 +140,10 @@ function displayResults(results) {
                     </tr>
                     <tr>
                         <td>Investment Cost</td>
-                        <td>${formatter.format(results.serviceInvestment.year1)}</td>
-                        <td>${formatter.format(results.serviceInvestment.year2)}</td>
-                        <td>${formatter.format(results.serviceInvestment.year3)}</td>
-                        <td>${formatter.format(
+                        <td>${formatMillions(results.serviceInvestment.year1)}</td>
+                        <td>${formatMillions(results.serviceInvestment.year2)}</td>
+                        <td>${formatMillions(results.serviceInvestment.year3)}</td>
+                        <td>${formatMillions(
                             results.serviceInvestment.year1 + 
                             results.serviceInvestment.year2 + 
                             results.serviceInvestment.year3
@@ -145,10 +151,10 @@ function displayResults(results) {
                     </tr>
                     <tr class="total-row">
                         <td>Net Benefits</td>
-                        <td>${formatter.format(results.benefits.year1.total - results.serviceInvestment.year1)}</td>
-                        <td>${formatter.format(results.benefits.year2.total - results.serviceInvestment.year2)}</td>
-                        <td>${formatter.format(results.benefits.year3.total - results.serviceInvestment.year3)}</td>
-                        <td>${formatter.format(results.netBenefits)}</td>
+                        <td>${formatMillions(results.benefits.year1.total - results.serviceInvestment.year1)}</td>
+                        <td>${formatMillions(results.benefits.year2.total - results.serviceInvestment.year2)}</td>
+                        <td>${formatMillions(results.benefits.year3.total - results.serviceInvestment.year3)}</td>
+                        <td>${formatMillions(results.netBenefits)}</td>
                     </tr>
                 </tbody>
             </table>
@@ -233,19 +239,19 @@ function displayResults(results) {
         // Prepare data for PDF export
         const companyData = {
             industry: results.industry.name,
-            revenue: formatter.format(document.getElementById('revenue').value),
+            revenue: formatMillions(results.revenue),
             maturity: document.getElementById('maturity').value.charAt(0).toUpperCase() + document.getElementById('maturity').value.slice(1),
             roiRatio: results.roiRatio.toFixed(2),
-            netBenefits: formatter.format(results.netBenefits),
+            netBenefits: formatMillions(results.netBenefits),
             paybackMonths: results.paybackMonths,
-            npv: formatter.format(results.npv)
+            npv: formatMillions(results.npv)
         };
         
         // Generate PDF
         generatePDF(companyData, results.benefits, results.serviceInvestment);
     });
     
-    // Create charts
+    // Create charts with values in millions
     createCharts({
         benefits: results.benefits,
         serviceInvestment: results.serviceInvestment,
@@ -259,6 +265,9 @@ function displayResults(results) {
  * @param {object} data - The data for the charts
  */
 function createCharts(data) {
+    // Convert values to millions for better chart display
+    const toMillions = (value) => value / 1000000;
+    
     // Benefits Breakdown Chart
     const benefitsCtx = document.getElementById('benefitsChart').getContext('2d');
     
@@ -270,36 +279,36 @@ function createCharts(data) {
                 {
                     label: 'Procurement Cost Savings',
                     data: [
-                        data.benefits.year1.procurementSavings,
-                        data.benefits.year2.procurementSavings,
-                        data.benefits.year3.procurementSavings
+                        toMillions(data.benefits.year1.procurementSavings),
+                        toMillions(data.benefits.year2.procurementSavings),
+                        toMillions(data.benefits.year3.procurementSavings)
                     ],
                     backgroundColor: '#4eb38f',
                 },
                 {
                     label: 'Carbon Value Impact',
                     data: [
-                        data.benefits.year1.carbonValueImpact,
-                        data.benefits.year2.carbonValueImpact,
-                        data.benefits.year3.carbonValueImpact
+                        toMillions(data.benefits.year1.carbonValueImpact),
+                        toMillions(data.benefits.year2.carbonValueImpact),
+                        toMillions(data.benefits.year3.carbonValueImpact)
                     ],
                     backgroundColor: '#0e7c61',
                 },
                 {
                     label: 'Risk Mitigation Value',
                     data: [
-                        data.benefits.year1.riskMitigationValue,
-                        data.benefits.year2.riskMitigationValue,
-                        data.benefits.year3.riskMitigationValue
+                        toMillions(data.benefits.year1.riskMitigationValue),
+                        toMillions(data.benefits.year2.riskMitigationValue),
+                        toMillions(data.benefits.year3.riskMitigationValue)
                     ],
                     backgroundColor: '#ffc107',
                 },
                 {
                     label: 'Brand Value / Market Access',
                     data: [
-                        data.benefits.year1.brandValueImpact,
-                        data.benefits.year2.brandValueImpact,
-                        data.benefits.year3.brandValueImpact
+                        toMillions(data.benefits.year1.brandValueImpact),
+                        toMillions(data.benefits.year2.brandValueImpact),
+                        toMillions(data.benefits.year3.brandValueImpact)
                     ],
                     backgroundColor: '#6c757d',
                 }
@@ -309,7 +318,7 @@ function createCharts(data) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Benefits Breakdown by Category and Year',
+                    text: 'Benefits Breakdown by Category and Year (in millions)',
                     font: {
                         size: 16
                     }
@@ -322,7 +331,7 @@ function createCharts(data) {
                                 label += ': ';
                             }
                             if (context.parsed.y !== null) {
-                                label += formatter.format(context.parsed.y);
+                                label += `$${context.parsed.y.toFixed(2)}M`;
                             }
                             return label;
                         }
@@ -338,7 +347,7 @@ function createCharts(data) {
                     stacked: true,
                     ticks: {
                         callback: function(value) {
-                            return formatter.format(value);
+                            return `$${value.toFixed(1)}M`;
                         },
                         font: {
                             size: 11
@@ -346,7 +355,7 @@ function createCharts(data) {
                     },
                     title: {
                         display: true,
-                        text: 'USD'
+                        text: 'USD (Millions)'
                     }
                 }
             }
@@ -367,13 +376,16 @@ function createCharts(data) {
         -data.serviceInvestment.year1 + data.benefits.year1.total - data.serviceInvestment.year2 + data.benefits.year2.total - data.serviceInvestment.year3 + data.benefits.year3.total
     ];
     
+    // Convert to millions
+    const cumulativeCashFlowInMillions = cumulativeCashFlow.map(value => toMillions(value));
+    
     new Chart(cashFlowCtx, {
         type: 'line',
         data: {
             labels: ['Initial', 'Year 1', 'Year 2', 'Year 3'],
             datasets: [{
                 label: 'Cumulative Cash Flow',
-                data: cumulativeCashFlow,
+                data: cumulativeCashFlowInMillions,
                 borderColor: '#0e7c61',
                 backgroundColor: 'rgba(14, 124, 97, 0.1)',
                 tension: 0.1,
@@ -385,7 +397,7 @@ function createCharts(data) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Cumulative Cash Flow',
+                    text: 'Cumulative Cash Flow (in millions)',
                     font: {
                         size: 16
                     }
@@ -398,7 +410,7 @@ function createCharts(data) {
                                 label += ': ';
                             }
                             if (context.parsed.y !== null) {
-                                label += formatter.format(context.parsed.y);
+                                label += `$${context.parsed.y.toFixed(2)}M`;
                             }
                             return label;
                         }
@@ -409,12 +421,12 @@ function createCharts(data) {
                 y: {
                     ticks: {
                         callback: function(value) {
-                            return formatter.format(value);
+                            return `$${value.toFixed(1)}M`;
                         }
                     },
                     title: {
                         display: true,
-                        text: 'USD'
+                        text: 'USD (Millions)'
                     }
                 }
             }
@@ -504,7 +516,7 @@ function createCharts(data) {
                                 // Add carbon price value for emissions savings
                                 if (context.datasetIndex === 2) {
                                     const carbonValue = value * data.carbonPrice;
-                                    label += ` (${formatter.format(carbonValue)})`;
+                                    label += ` ($${(carbonValue/1000000).toFixed(2)}M)`;
                                 }
                             }
                             return label;
@@ -580,7 +592,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (industryCode && revenue) {
             const industry = industryParameters[industryCode];
             const procurementSpend = revenue * industry.procurementPercent;
-            document.getElementById('procurement').placeholder = `Calculated: ${formatter.format(procurementSpend)}`;
+            document.getElementById('procurement').placeholder = `Calculated: $${procurementSpend.toFixed(2)}M`;
         }
     });
     
@@ -592,7 +604,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (industryCode && revenue) {
             const industry = industryParameters[industryCode];
             const procurementSpend = revenue * industry.procurementPercent;
-            document.getElementById('procurement').placeholder = `Calculated: ${formatter.format(procurementSpend)}`;
+            document.getElementById('procurement').placeholder = `Calculated: $${procurementSpend.toFixed(2)}M`;
         }
     });
     
@@ -614,7 +626,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Create a unique name for the scenario
         const industry = industryParameters[industryCode];
-        const scenarioName = `${industry.name} - ${formatter.format(revenue)} Revenue`;
+        const scenarioName = `${industry.name} - $${revenue}M Revenue`;
         
         // Store the scenario data
         const scenarioData = {
