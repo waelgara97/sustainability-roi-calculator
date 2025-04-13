@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculation Methodology | Sustainability Rating Services ROI Calculator</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <style>
+        .methodology-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+        }
+        
+        .methodology-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .methodology-section:last-child {
+            border-bottom: none;
+        }
+        
+        .formula {
+            background-color: #f5f5f5;
+            padding: 12px 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        .reference {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: left;
+            padding: 10px;
+        }
+        
+        td {
+            padding: 10px;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin: 20px 0;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .methodology-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sustainability Rating Services ROI Calculator</h1>
+        <p>Calculation Methodology and Data Sources</p>
+    </header>
+    
+    <div class="methodology-container">
+        <div class="methodology-header">
+            <h2>Calculation Methodology</h2>
+            <a href="index.html" class="back-link">← Back to Calculator</a>
+        </div>
+        
+        <div class="methodology-section">
+            <h3>Overview of the Model</h3>
+            <p>The ROI Calculator uses a comprehensive model based on industry-specific data and academic research to estimate the financial benefits of implementing sustainability rating services across four key categories. The model projects benefits over a 3-year period and compares them against the investment costs to calculate ROI.</p>
+            
+            <p>The four benefit categories are:</p>
+            <ol>
+                <li><strong>Procurement Cost Savings</strong> - Efficiency gains and waste reduction in supply chain</li>
+                <li><strong>Carbon Value Impact</strong> - Financial value of reduced carbon emissions</li>
+                <li><strong>Risk Mitigation Value</strong> - Reduced exposure to supply chain disruptions and regulatory penalties</li>
+                <li><strong>Brand Value / Market Access</strong> - Enhanced reputation and access to new markets</li>
+            </ol>
+        </div>
+        
+        <div class="methodology-section">
+            <h3>Data Sources</h3>
+            <p>The calculator's methodology relies on several authoritative data sources:</p>
+            
+            <table>
+                <tr>
+                    <th>Data Source</th>
+                    <th>Data Elements</th>
+                    <th>How It's Used</th>
+                </tr>
+                <tr>
+                    <td>U.S. Census Bureau Annual Survey of Manufactures (2021)</td>
+                    <td>Industry procurement ratios, supply chain structures</td>
+                    <td>Determines industry-specific procurement spend as a percentage of revenue</td>
+                </tr>
+                <tr>
+                    <td>EPA USEEIO Supply Chain GHG Emission Factors (v1.3.0)</td>
+                    <td>Scope 3 emissions factors by industry sector</td>
+                    <td>Calculates supply chain carbon footprint based on procurement spend and industry</td>
+                </tr>
+                <tr>
+                    <td>McKinsey "Buying into a more sustainable value chain" (2021)</td>
+                    <td>Procurement sustainability savings benchmarks</td>
+                    <td>Informs the cost savings potential from sustainable procurement practices</td>
+                </tr>
+                <tr>
+                    <td>EcoVadis Sustainable Procurement Barometer (2023)</td>
+                    <td>Maturity model impact factors</td>
+                    <td>Adjusts benefit calculations based on organization's sustainability maturity level</td>
+                </tr>
+                <tr>
+                    <td>World Economic Forum Net-Zero Industry Tracker (2024)</td>
+                    <td>Industry decarbonization pathways, carbon reduction potentials</td>
+                    <td>Informs carbon reduction potential by industry and year</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="methodology-section">
+            <h3>Detailed Calculation Methodology by Benefit Category</h3>
+            
+            <h4>1. Procurement Cost Savings</h4>
+            <p>Cost savings are calculated based on identifying inefficiencies, reducing waste, and implementing more sustainable practices in the supply chain.</p>
+            
+            <div class="formula">
+                Procurement Cost Savings = Procurement Spend × Industry Savings Factor × Maturity Adjustment × Growth Factor
+            </div>
+            
+            <p>Where:</p>
+            <ul>
+                <li><strong>Procurement Spend</strong>: Either user-provided or calculated as a percentage of revenue based on industry benchmarks (ranges from 25-70% depending on industry)</li>
+                <li><strong>Industry Savings Factor</strong>: Potential savings percentage based on industry (ranges from 0.8% to 1.5%)</li>
+                <li><strong>Maturity Adjustment</strong>: Factor based on current sustainability maturity level (Beginning: 1.0, Developing: 0.8, Established: 0.6, Advanced: 0.4, Leading: 0.3)</li>
+                <li><strong>Growth Factor</strong>: Increase in efficiency over time (Year 1: 1.0, Year 2: 1.03, Year 3: 1.06)</li>
+            </ul>
+            
+            <p class="reference">Reference: The savings factors are derived from McKinsey's "Buying into a more sustainable value chain" (2021) study, which analyzed cost savings from sustainable procurement initiatives across multiple industries.</p>
+            
+            <h4>2. Carbon Value Impact</h4>
+            <p>This represents the financial value of reduced carbon emissions in your supply chain.</p>
+            
+            <div class="formula">
+                Carbon Value Impact = (Procurement Spend × Industry Emission Factor × 0.001) × Carbon Price × Reduction Percentage
+            </div>
+            
+            <p>Where:</p>
+            <ul>
+                <li><strong>Procurement Spend</strong>: As defined above</li>
+                <li><strong>Industry Emission Factor</strong>: kg CO2e per USD of spend (from EPA USEEIO model)</li>
+                <li><strong>0.001</strong>: Conversion factor from kg to metric tons</li>
+                <li><strong>Carbon Price</strong>: User-defined carbon price (USD/ton), default: $50/ton</li>
+                <li><strong>Reduction Percentage</strong>: Year 1: 15%, Year 2: 19.5%, Year 3: 25.4%</li>
+            </ul>
+            
+            <p class="reference">Reference: Emission factors come directly from the EPA USEEIO model v1.3.0, which provides detailed supply chain emission factors by industry. Reduction percentages are based on World Economic Forum Net-Zero Industry Tracker (2024) data.</p>
+            
+            <h4>3. Risk Mitigation Value</h4>
+            <p>This quantifies the value of reduced exposure to supply chain disruptions, regulatory penalties, and other sustainability-related risks.</p>
+            
+            <div class="formula">
+                Risk Mitigation Value = Base Risk Value × Industry Risk Level Factor × Revenue Scale × Maturity Adjustment × Growth Factor
+            </div>
+            
+            <p>Where:</p>
+            <ul>
+                <li><strong>Base Risk Value</strong>: Base value by risk level (High: $250,000, Medium: $150,000, Low: $100,000)</li>
+                <li><strong>Industry Risk Level Factor</strong>: Industry-specific risk level (based on regulatory exposure and emission intensity)</li>
+                <li><strong>Revenue Scale</strong>: Logarithmic scaling based on company size (Log10(Revenue) / Log10(1 billion))</li>
+                <li><strong>Maturity Adjustment</strong>: As defined above</li>
+                <li><strong>Growth Factor</strong>: As defined above</li>
+            </ul>
+            
+            <p class="reference">Reference: Risk values are derived from industry risk analysis studies and adjusted for organization size. The logarithmic scaling ensures proportional risk values across different company sizes.</p>
+            
+            <h4>4. Brand Value / Market Access</h4>
+            <p>This represents the positive impact on brand reputation and access to customers and markets that prioritize sustainability.</p>
+            
+            <div class="formula">
+                Brand Value Impact = Annual Revenue × Brand Value Percentage
+            </div>
+            
+            <p>Where:</p>
+            <ul>
+                <li><strong>Annual Revenue</strong>: User-provided annual revenue</li>
+                <li><strong>Brand Value Percentage</strong>: Year 1: 0.1%, Year 2: 0.15%, Year 3: 0.2%</li>
+            </ul>
+            
+            <p class="reference">Reference: These brand value percentages are conservative estimates based on market studies that demonstrate a correlation between strong sustainability performance and brand value/market access.</p>
+        </div>
+        
+        <div class="methodology-section">
+            <h3>ROI Calculation</h3>
+            
+            <p>The ROI is calculated using standard financial metrics:</p>
+            
+            <div class="formula">
+                ROI Ratio = Total Benefits / Total Investment
+            </div>
+            
+            <div class="formula">
+                Net Present Value (NPV) = Σ [Net Cash Flow_t / (1 + r)^t]
+            </div>
+            
+            <p>Where:</p>
+            <ul>
+                <li><strong>Total Benefits</strong>: Sum of all benefit categories across 3 years</li>
+                <li><strong>Total Investment</strong>: Sum of service investment costs across 3 years</li>
+                <li><strong>Net Cash Flow_t</strong>: Benefits minus Investment in year t</li>
+                <li><strong>r</strong>: Discount rate (10%)</li>
+                <li><strong>t</strong>: Year (1, 2, or 3)</li>
+            </ul>
+            
+            <p>The payback period is calculated by determining the point at which cumulative net benefits equal or exceed the cumulative investment costs.</p>
+        </div>
+        
+        <div class="methodology-section">
+            <h3>Industry-Specific Parameters</h3>
+            <p>The calculator uses industry-specific parameters to tailor the results to your organization's sector. These include:</p>
+            
+            <ul>
+                <li><strong>Procurement as % of Revenue</strong>: Ranges from 25% to 70% depending on industry</li>
+                <li><strong>Emission Factors</strong>: Industry-specific emission factors from EPA USEEIO model (kg CO2e/USD)</li>
+                <li><strong>Cost Savings Potential</strong>: Industry-specific savings percentages (0.8% to 1.5%)</li>
+                <li><strong>Risk Profiles</strong>: Industry risk categorization (high, medium, low)</li>
+            </ul>
+            
+            <table>
+                <tr>
+                    <th>Industry (NAICS Code)</th>
+                    <th>Procurement %</th>
+                    <th>Emission Factor (kg CO2e/USD)</th>
+                    <th>Risk Level</th>
+                </tr>
+                <tr>
+                    <td>Agriculture, Forestry, Fishing and Hunting (11)</td>
+                    <td>60%</td>
+                    <td>1.12</td>
+                    <td>High</td>
+                </tr>
+                <tr>
+                    <td>Mining, Oil and Gas (21)</td>
+                    <td>55%</td>
+                    <td>1.25</td>
+                    <td>High</td>
+                </tr>
+                <tr>
+                    <td>Manufacturing (31-33)</td>
+                    <td>65%</td>
+                    <td>1.05</td>
+                    <td>High</td>
+                </tr>
+                <tr>
+                    <td>Information (51)</td>
+                    <td>35%</td>
+                    <td>0.32</td>
+                    <td>Medium</td>
+                </tr>
+                <tr>
+                    <td>Finance and Insurance (52)</td>
+                    <td>30%</td>
+                    <td>0.47</td>
+                    <td>High</td>
+                </tr>
+                <!-- Additional industry examples would be included here -->
+            </table>
+            <p><em>Note: This is a subset of industry parameters. The calculator includes parameters for all 23 NAICS sectors.</em></p>
+        </div>
+        
+        <div class="methodology-section">
+            <h3>Maturity Level Adjustments</h3>
+            <p>The calculator adjusts benefit calculations based on your organization's current sustainability maturity level:</p>
+            
+            <table>
+                <tr>
+                    <th>Maturity Level</th>
+                    <th>Description</th>
+                    <th>Savings Multiplier</th>
+                    <th>Risk Reduction Multiplier</th>
+                </tr>
+                <tr>
+                    <td>Beginning</td>
+                    <td>Just starting sustainability initiatives, minimal supplier engagement</td>
+                    <td>1.0</td>
+                    <td>1.0</td>
+                </tr>
+                <tr>
+                    <td>Developing</td>
+                    <td>Some processes in place, early supplier assessment</td>
+                    <td>0.8</td>
+                    <td>0.8</td>
+                </tr>
+                <tr>
+                    <td>Established</td>
+                    <td>Formal program established, regular supplier assessment</td>
+                    <td>0.6</td>
+                    <td>0.6</td>
+                </tr>
+                <tr>
+                    <td>Advanced</td>
+                    <td>Comprehensive program, deep supplier engagement</td>
+                    <td>0.4</td>
+                    <td>0.4</td>
+                </tr>
+                <tr>
+                    <td>Leading</td>
+                    <td>Industry-leading program, full supply chain visibility</td>
+                    <td>0.3</td>
+                    <td>0.3</td>
+                </tr>
+            </table>
+            
+            <p>Higher maturity levels result in lower multipliers, as organizations with advanced sustainability programs have already captured some of the available benefits.</p>
+        </div>
+        
+        <div class="methodology-section">
+            <h3>Limitations and Considerations</h3>
+            <p>While the calculator provides valuable insights, users should be aware of the following limitations:</p>
+            
+            <ul>
+                <li>Results are estimates based on industry averages and may vary based on your specific organization's characteristics</li>
+                <li>The model assumes consistent implementation of sustainability rating services over the 3-year period</li>
+                <li>Benefits are projected based on historical data and may be affected by future market changes</li>
+                <li>The calculator does not account for all potential benefits (e.g., employee retention, innovation)</li>
+                <li>Results should be used as one input in a broader decision-making process</li>
+            </ul>
+        </div>
+        
+        <a href="index.html" class="back-link">← Back to Calculator</a>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sustainability Rating Services ROI Calculator</p>
+        </div>
+    </footer>
+</body>
+</html>
