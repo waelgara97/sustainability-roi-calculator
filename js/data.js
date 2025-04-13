@@ -205,12 +205,21 @@ const riskValues = {
     low: 0.12      // 0.12 million = $120,000
 };
 
-// Default service investment costs in millions
+// Default service investment costs in millions for baseline (small company reference point)
+// Actual investment costs will be scaled based on company size using logarithmic scaling in calculateScaledInvestment()
 const defaultServiceInvestment = {
-    year1: 0.25,   // 0.25 million = $250,000
+    year1: 0.25,   // 0.25 million = $250,000 (reference base point for a $50M company)
     year2: 0.275,  // 0.275 million = $275,000
     year3: 0.29    // 0.29 million = $290,000
 };
+
+// For reference, typical investment costs by company size after scaling:
+// $50M company: ~$0.25M
+// $250M company: ~$0.5M
+// $1B company: ~$0.9M
+// $5B company: ~$1.5M 
+// $20B company: ~$2.25M
+// $100B company: ~$3M
 
 // Carbon reduction percentages by year
 const carbonReduction = {
