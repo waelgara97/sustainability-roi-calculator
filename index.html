@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sustainability Rating Services ROI Calculator</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <meta name="description" content="Calculate the ROI for implementing sustainability rating services in your organization">
+</head>
+<body>
+    <header>
+        <h1>Sustainability Rating Services ROI Calculator</h1>
+        <p>Estimate the financial benefits and return on investment from sustainability rating services</p>
+    </header>
+    
+    <div class="container">
+        <div class="intro-section">
+            <h2>About This Calculator</h2>
+            <p>This calculator helps organizations understand the potential financial benefits of implementing sustainability rating services across their supply chain. It estimates return on investment based on industry-specific data and your organization's characteristics.</p>
+            <p>The calculator considers four key benefit categories:</p>
+            <ol>
+                <li><strong>Procurement Cost Savings</strong> - Identify inefficiencies and reduce waste in your supply chain</li>
+                <li><strong>Carbon Value Impact</strong> - Quantify the financial value of reduced carbon emissions</li>
+                <li><strong>Risk Mitigation Value</strong> - Reduce exposure to supply chain disruptions and regulatory penalties</li>
+                <li><strong>Brand Value / Market Access</strong> - Enhance reputation and access to new markets</li>
+            </ol>
+        </div>
+        <div class="calculator-container">
+            <section class="input-section">
+                <h2>Input Parameters</h2>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                    <div style="font-weight: 500;">Enter your company information</div>
+                    <div>
+                        <button type="button" id="save-scenario" style="padding: 5px 10px; background-color: var(--secondary-color);">
+                            Save Scenario
+                        </button>
+                    </div>
+                </div>
+                <form id="roi-form">
+                    <div class="form-group">
+                        <label for="industry">Industry <span class="tooltip"><span class="info-icon">i</span>
+                            <span class="tooltiptext">Select your primary industry sector</span></span></label>
+                        <select id="industry" required>
+                            <option value="">Select Industry</option>
+                            <option value="sector11">Agriculture, Forestry, Fishing and Hunting (NAICS 11)</option>
+                            <option value="sector21">Mining, Quarrying, and Oil and Gas Extraction (NAICS 21)</option>
+                            <option value="sector22">Utilities (NAICS 22)</option>
+                            <option value="sector23">Construction (NAICS 23)</option>
+                            <option value="sector31">Manufacturing (Part 1) (NAICS 31)</option>
+                            <option value="sector32">Manufacturing (Part 2) (NAICS 32)</option>
+                            <option value="sector33">Manufacturing (Part 3) (NAICS 33)</option>
+                            <option value="sector42">Wholesale Trade (NAICS 42)</option>
+                            <option value="sector44">Retail Trade (Part 1) (NAICS 44)</option>
+                            <option value="sector45">Retail Trade (Part 2) (NAICS 45)</option>
+                            <option value="sector48">Transportation and Warehousing (Part 1) (NAICS 48)</option>
+                            <option value="sector49">Transportation and Warehousing (Part 2) (NAICS 49)</option>
+                            <option value="sector51">Information (NAICS 51)</option>
+                            <option value="sector52">Finance and Insurance (NAICS 52)</option>
+                            <option value="sector53">Real Estate and Rental and Leasing (NAICS 53)</option>
+                            <option value="sector54">Professional, Scientific, and Technical Services (NAICS 54)</option>
+                            <option value="sector55">Management of Companies and Enterprises (NAICS 55)</option>
+                            <option value="sector56">Administrative and Support Services (NAICS 56)</option>
+                            <option value="sector61">Educational Services (NAICS 61)</option>
+                            <option value="sector62">Health Care and Social Assistance (NAICS 62)</option>
+                            <option value="sector71">Arts, Entertainment, and Recreation (NAICS 71)</option>
+                            <option value="sector72">Accommodation and Food Services (NAICS 72)</option>
+                            <option value="sector81">Other Services (NAICS 81)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="revenue">Annual Revenue (USD) <span class="tooltip"><span class="info-icon">i</span>
+                            <span class="tooltiptext">Your company's total annual revenue</span></span></label>
+                        <input type="number" id="revenue" placeholder="e.g., 100000000" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="suppliers">Number of Suppliers <span class="tooltip"><span class="info-icon">i</span>
+                            <span class="tooltiptext">Optional: Total number of suppliers in your supply chain</span></span></label>
+                        <input type="number" id="suppliers" placeholder="Optional">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="procurement">Annual Procurement Spend (USD) <span class="tooltip"><span class="info-icon">i</span>
+                            <span class="tooltiptext">Optional: If left blank, will be calculated based on industry average</span></span></label>
+                        <input type="number" id="procurement" placeholder="Optional">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="carbon-price">Carbon Price (USD/ton) <span class="tooltip"><span class="info-icon">i</span>
+                            <span class="tooltiptext">Current or projected carbon price you use for internal valuation</span></span></label>
+                        <input type="number" id="carbon-price" placeholder="e.g., 50" value="50" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="maturity">Sustainability Maturity Level <span class="tooltip"><span class="info-icon">i</span>
+                            <span class="tooltiptext">Your organization's current sustainability program maturity</span></span></label>
+                        <select id="maturity" required>
+                            <option value="beginning">Beginning</option>
+                            <option value="developing">Developing</option>
+                            <option value="established">Established</option>
+                            <option value="advanced">Advanced</option>
+                            <option value="leading">Leading</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="investment">Annual Service Investment (USD) <span class="tooltip"><span class="info-icon">i</span>
+                            <span class="tooltiptext">Default values are used if left blank ($250k year 1, $275k year 2, $290k year 3)</span></span></label>
+                        <input type="number" id="investment" placeholder="Optional (e.g., 250000)">
+                    </div>
+                    
+                    <button type="submit" id="calculate-btn">Calculate ROI</button>
+                    <button type="button" id="reset-btn" style="background-color: #6c757d; margin-left: 10px;">Reset</button>
+                    
+                    <div id="saved-scenarios" style="margin-top: 20px; display: none;">
+                        <h3 style="font-size: 16px; border-top: 1px solid #eee; padding-top: 15px;">Saved Scenarios</h3>
+                        <div id="scenarios-list"></div>
+                    </div>
+                </form>
+            </section>
+            
+            <section class="results-section">
+                <h2>Results</h2>
+                <div id="loading" class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Calculating ROI...</p>
+                </div>
+                <div id="results-container">
+                    <p>Enter your information and click "Calculate ROI" to see results.</p>
+                </div>
+            </section>
+        </div>
+        
+        <div class="assumptions">
+            <h3>Data Sources & Assumptions</h3>
+            <p>This calculator uses data from:</p>
+            <ul>
+                <li>U.S. Census Bureau Annual Survey of Manufactures (2021)</li>
+                <li>EPA USEEIO Supply Chain GHG Emission Factors (v1.3.0)</li>
+                <li>McKinsey "Buying into a more sustainable value chain" (2021)</li>
+                <li>EcoVadis Sustainable Procurement Barometer (2023)</li>
+                <li>World Economic Forum Net-Zero Industry Tracker (2024)</li>
+            </ul>
+            <p>Key assumptions include:</p>
+            <ul>
+                <li>Procurement as % of revenue based on industry benchmarks (ranges from 25-70%)</li>
+                <li>Emission factors derived from EPA USEEIO model (kg CO2e/USD)</li>
+                <li>Cost savings opportunities range from 0.8-1.5% of procurement spend based on industry</li>
+                <li>Carbon reduction potential: 15% year 1, 19.5% year 2, 25.4% year 3</li>
+                <li>Risk reduction values based on industry risk profile and emission intensity</li>
+                <li>Brand value impact increases from 0.1% of revenue in year 1 to 0.2% in year 3</li>
+            </ul>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sustainability Rating Services ROI Calculator</p>
+        </div>
+    </footer>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/calculator.js"></script>
+    <script src="js/pdf-export.js"></script>
+    <script src="js/ui.js"></script>
+</body>
+</html>
