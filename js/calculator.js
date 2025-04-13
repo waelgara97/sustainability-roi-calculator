@@ -21,15 +21,20 @@ const formatter = new Intl.NumberFormat('en-US', {
 function calculateROI() {
     // Get input values from form
     const industryCode = document.getElementById('industry').value;
-    const revenue = parseFloat(document.getElementById('revenue').value);
+    const revenueInK = parseFloat(document.getElementById('revenue').value);
     const supplierCount = document.getElementById('suppliers').value ? parseInt(document.getElementById('suppliers').value) : null;
-    let procurementSpend = document.getElementById('procurement').value ? parseFloat(document.getElementById('procurement').value) : null;
+    let procurementSpendInK = document.getElementById('procurement').value ? parseFloat(document.getElementById('procurement').value) : null;
     const carbonPrice = parseFloat(document.getElementById('carbon-price').value);
     const maturityCode = document.getElementById('maturity').value;
-    const customInvestment = document.getElementById('investment').value ? parseFloat(document.getElementById('investment').value) : null;
+    const customInvestmentInK = document.getElementById('investment').value ? parseFloat(document.getElementById('investment').value) : null;
+    
+    // Convert from thousands to actual dollars
+    const revenue = revenueInK * 1000;
+    let procurementSpend = procurementSpendInK ? procurementSpendInK * 1000 : null;
+    const customInvestment = customInvestmentInK ? customInvestmentInK * 1000 : null;
     
     // Validate inputs
-    if (!industryCode || !revenue || !carbonPrice || !maturityCode) {
+    if (!industryCode || !revenueInK || !carbonPrice || !maturityCode) {
         alert("Please fill in all required fields");
         return;
     }
@@ -151,22 +156,20 @@ function calculateYearlyBenefits(year, industry, maturity, revenue, procurementS
     const supplyChainEmissionsInTons = supplyChainEmissions / 1000;
     const carbonValueImpact = supplyChainEmissionsInTons * carbonPrice * carbonReductionPercent;
     
- // Calculate risk mitigation value - scale based on company size
-const baseRiskValue = riskValues[industry.riskLevel];
-
-// Apply improved revenue scaling with tiered approach
-const revenueScale = calculateRiskRevenueScale(revenue);
-
-// Calculate revenue-based component
-const revenuePercentComponent = revenue * 0.0002 * (industry.riskLevel === "high" ? 1.0 : industry.riskLevel === "medium" ? 0.6 : 0.3);
-
-// Calculate the total risk mitigation value with both components
-const riskMitigationValue = (baseRiskValue * revenueScale * maturity.riskReductionMultiplier * growthMultiplier) + 
-                           (revenuePercentComponent * maturity.riskReductionMultiplier * growthMultiplier);
-
-
+    // Calculate risk mitigation value - scale based on company size
+    const baseRiskValue = riskValues[industry.riskLevel];
     
-// Calculate brand value / market access impact
+    // Apply improved revenue scaling with tiered approach
+    const revenueScale = calculateRiskRevenueScale(revenue);
+    
+    // Calculate revenue-based component
+    const revenuePercentComponent = revenue * 0.0002 * (industry.riskLevel === "high" ? 1.0 : industry.riskLevel === "medium" ? 0.6 : 0.3);
+    
+    // Calculate the total risk mitigation value with both components
+    const riskMitigationValue = (baseRiskValue * revenueScale * maturity.riskReductionMultiplier * growthMultiplier) + 
+                               (revenuePercentComponent * maturity.riskReductionMultiplier * growthMultiplier);
+    
+    // Calculate brand value / market access impact
     let brandValuePercent;
     if (year === 1) brandValuePercent = brandValueIncrease.year1;
     else if (year === 2) brandValuePercent = brandValueIncrease.year2;
@@ -209,6 +212,8 @@ function calculateRiskRevenueScale(revenue) {
     return 5.0 + (Math.min(revenue, 100000000000) - 10000000000) / 90000000000 * 5.0;
   }
 }
+
+/**
  * Helper function to determine top benefit area
  * @param {object} results - Calculation results
  * @returns {string} - Top benefit area name
