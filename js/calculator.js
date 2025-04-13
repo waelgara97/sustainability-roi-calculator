@@ -151,17 +151,22 @@ function calculateYearlyBenefits(year, industry, maturity, revenue, procurementS
     const supplyChainEmissionsInTons = supplyChainEmissions / 1000;
     const carbonValueImpact = supplyChainEmissionsInTons * carbonPrice * carbonReductionPercent;
     
-    // Calculate risk mitigation value - scale based on company size
-    const baseRiskValue = riskValues[industry.riskLevel];
+ // Calculate risk mitigation value - scale based on company size
+const baseRiskValue = riskValues[industry.riskLevel];
+
+// Apply improved revenue scaling with tiered approach
+const revenueScale = calculateRiskRevenueScale(revenue);
+
+// Calculate revenue-based component
+const revenuePercentComponent = revenue * 0.0002 * (industry.riskLevel === "high" ? 1.0 : industry.riskLevel === "medium" ? 0.6 : 0.3);
+
+// Calculate the total risk mitigation value with both components
+const riskMitigationValue = (baseRiskValue * revenueScale * maturity.riskReductionMultiplier * growthMultiplier) + 
+                           (revenuePercentComponent * maturity.riskReductionMultiplier * growthMultiplier);
+
+
     
-    // Apply revenue scaling factor (larger companies have higher risk exposure)
-    // Using logarithmic scaling to prevent extreme values
-    const revenueScale = Math.log10(revenue) / Math.log10(1000000000); // 1B revenue = scale of 1.0
-    const scaledRiskValue = baseRiskValue * Math.max(0.5, Math.min(2.0, revenueScale)); // Limit scale between 0.5x and 2.0x
-    
-    const riskMitigationValue = scaledRiskValue * maturity.riskReductionMultiplier * growthMultiplier;
-    
-    // Calculate brand value / market access impact
+// Calculate brand value / market access impact
     let brandValuePercent;
     if (year === 1) brandValuePercent = brandValueIncrease.year1;
     else if (year === 2) brandValuePercent = brandValueIncrease.year2;
@@ -182,6 +187,28 @@ function calculateYearlyBenefits(year, industry, maturity, revenue, procurementS
 }
 
 /**
+ * Calculate the risk revenue scale using a tiered approach
+ * @param {number} revenue - Annual revenue
+ * @returns {number} - Calculated revenue scale factor
+ */
+function calculateRiskRevenueScale(revenue) {
+  // Base value for companies up to $100M
+  if (revenue <= 100000000) {
+    return Math.max(0.5, revenue / 100000000);
+  }
+  // Scale for companies between $100M and $1B
+  else if (revenue <= 1000000000) {
+    return 1.0 + (revenue - 100000000) / 900000000 * 1.0;
+  }
+  // Scale for companies between $1B and $10B
+  else if (revenue <= 10000000000) {
+    return 2.0 + (revenue - 1000000000) / 9000000000 * 3.0;
+  }
+  // Scale for companies above $10B
+  else {
+    return 5.0 + (Math.min(revenue, 100000000000) - 10000000000) / 90000000000 * 5.0;
+  }
+}
  * Helper function to determine top benefit area
  * @param {object} results - Calculation results
  * @returns {string} - Top benefit area name
