@@ -111,6 +111,7 @@ function calculateROI() {
     displayResults({
         industry,
         maturity,
+        revenue,
         procurementSpend,
         supplyChainEmissions,
         benefits,
@@ -150,9 +151,15 @@ function calculateYearlyBenefits(year, industry, maturity, revenue, procurementS
     const supplyChainEmissionsInTons = supplyChainEmissions / 1000;
     const carbonValueImpact = supplyChainEmissionsInTons * carbonPrice * carbonReductionPercent;
     
-    // Calculate risk mitigation value
+    // Calculate risk mitigation value - scale based on company size
     const baseRiskValue = riskValues[industry.riskLevel];
-    const riskMitigationValue = baseRiskValue * maturity.riskReductionMultiplier * growthMultiplier;
+    
+    // Apply revenue scaling factor (larger companies have higher risk exposure)
+    // Using logarithmic scaling to prevent extreme values
+    const revenueScale = Math.log10(revenue) / Math.log10(1000000000); // 1B revenue = scale of 1.0
+    const scaledRiskValue = baseRiskValue * Math.max(0.5, Math.min(2.0, revenueScale)); // Limit scale between 0.5x and 2.0x
+    
+    const riskMitigationValue = scaledRiskValue * maturity.riskReductionMultiplier * growthMultiplier;
     
     // Calculate brand value / market access impact
     let brandValuePercent;
