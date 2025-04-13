@@ -10,7 +10,9 @@ const savedScenarios = [];
 const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    maximumFractionDigits: 0
+    notation: 'compact',
+    compactDisplay: 'short',
+    maximumFractionDigits: 1
 });
 
 /**
