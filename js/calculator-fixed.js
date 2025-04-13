@@ -10,7 +10,9 @@ const savedScenarios = [];
 const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    maximumFractionDigits: 0
+    maximumFractionDigits: 1,
+    notation: 'compact',
+    compactDisplay: 'short'
 });
 
 /**
@@ -19,12 +21,12 @@ const formatter = new Intl.NumberFormat('en-US', {
 function calculateROI() {
     // Get input values from form
     const industryCode = document.getElementById('industry').value;
-    const revenue = parseFloat(document.getElementById('revenue').value) * 1000; // Convert K to actual dollars
+    const revenue = parseFloat(document.getElementById('revenue').value) * 1000000; // Convert M to actual dollars
     const supplierCount = document.getElementById('suppliers').value ? parseInt(document.getElementById('suppliers').value) : null;
-    let procurementSpend = document.getElementById('procurement').value ? parseFloat(document.getElementById('procurement').value) * 1000 : null; // Convert K to actual dollars
+    let procurementSpend = document.getElementById('procurement').value ? parseFloat(document.getElementById('procurement').value) * 1000000 : null; // Convert M to actual dollars
     const carbonPrice = parseFloat(document.getElementById('carbon-price').value);
     const maturityCode = document.getElementById('maturity').value;
-    const customInvestment = document.getElementById('investment').value ? parseFloat(document.getElementById('investment').value) * 1000 : null; // Convert K to actual dollars
+    const customInvestment = document.getElementById('investment').value ? parseFloat(document.getElementById('investment').value) * 1000000 : null; // Convert M to actual dollars
     
     // Validate inputs
     if (!industryCode || isNaN(revenue) || !carbonPrice || !maturityCode) {
@@ -135,8 +137,8 @@ function calculateROI() {
  * @returns {number} - Scaled investment cost
  */
 function calculateScaledInvestment(revenue) {
-    // Base investment for small companies ($250,000)
-    const baseInvestment = 250000;
+    // Base investment in actual dollars (convert from millions in defaultServiceInvestment)
+    const baseInvestment = defaultServiceInvestment.year1 * 1000000;
     
     // For companies with less than $100M revenue, use the base investment
     if (revenue <= 100000000) {
@@ -196,7 +198,8 @@ function calculateYearlyBenefits(year, industry, maturity, revenue, procurementS
     const carbonValueImpact = supplyChainEmissionsInTons * carbonPrice * carbonReductionPercent;
     
     // Calculate risk mitigation value with improved scaling
-    const baseRiskValue = riskValues[industry.riskLevel];
+    // Convert risk values from millions to actual dollars
+    const baseRiskValue = riskValues[industry.riskLevel] * 1000000;
     
     // Apply more reasonable revenue scaling with improved logarithmic approach
     const revenueScale = calculateRiskRevenueScale(revenue);
