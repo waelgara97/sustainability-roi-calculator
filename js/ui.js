@@ -297,12 +297,7 @@ function createCharts(data) {
                                 label += ': ';
                             }
                             if (context.parsed.y !== null) {
-                                label += new Intl.NumberFormat('en-US', {
-                                    style: 'currency',
-                                    currency: 'USD',
-                                    minimumFractionDigits: 0,
-                                    maximumFractionDigits: 0
-                                }).format(context.parsed.y);
+                                label += formatter.format(context.parsed.y);
                             }
                             return label;
                         }
@@ -318,7 +313,7 @@ function createCharts(data) {
                     stacked: true,
                     ticks: {
                         callback: function(value) {
-                            return '$' + value.toLocaleString();
+                            return formatter.format(value);
                         },
                         font: {
                             size: 11
@@ -378,12 +373,7 @@ function createCharts(data) {
                                 label += ': ';
                             }
                             if (context.parsed.y !== null) {
-                                label += new Intl.NumberFormat('en-US', {
-                                    style: 'currency',
-                                    currency: 'USD',
-                                    minimumFractionDigits: 0,
-                                    maximumFractionDigits: 0
-                                }).format(context.parsed.y);
+                                label += formatter.format(context.parsed.y);
                             }
                             return label;
                         }
@@ -394,7 +384,7 @@ function createCharts(data) {
                 y: {
                     ticks: {
                         callback: function(value) {
-                            return '$' + value.toLocaleString();
+                            return formatter.format(value);
                         }
                     },
                     title: {
@@ -441,7 +431,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (industryCode && revenue) {
             const industry = industryParameters[industryCode];
             const procurementSpend = revenue * industry.procurementPercent;
-            document.getElementById('procurement').placeholder = `Calculated: ${Math.round(procurementSpend).toLocaleString()} USD`;
+            document.getElementById('procurement').placeholder = `Calculated: ${formatter.format(procurementSpend)}`;
         }
     });
     
@@ -453,7 +443,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (industryCode && revenue) {
             const industry = industryParameters[industryCode];
             const procurementSpend = revenue * industry.procurementPercent;
-            document.getElementById('procurement').placeholder = `Calculated: ${Math.round(procurementSpend).toLocaleString()} USD`;
+            document.getElementById('procurement').placeholder = `Calculated: ${formatter.format(procurementSpend)}`;
         }
     });
     
@@ -475,13 +465,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Create a unique name for the scenario
         const industry = industryParameters[industryCode];
-        const scenarioName = `${industry.name} - ${new Intl.NumberFormat('en-US', { 
-            style: 'currency', 
-            currency: 'USD',
-            notation: 'compact',
-            compactDisplay: 'short',
-            maximumFractionDigits: 1
-        }).format(revenue)} Revenue`;
+        const scenarioName = `${industry.name} - ${formatter.format(revenue)} Revenue`;
         
         // Store the scenario data
         const scenarioData = {
