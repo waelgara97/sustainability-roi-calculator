@@ -197,11 +197,12 @@ const maturityLevels = {
     }
 };
 
-// Risk baseline values by risk level
+// Risk baseline values by risk level - adjusted to be more proportional to other benefits
+// and scale with company size
 const riskValues = {
-    high: 1000000,
-    medium: 850000,
-    low: 500000
+    high: 250000,   // Was 1000000
+    medium: 150000, // Was 850000
+    low: 100000     // Was 500000
 };
 
 // Default service investment costs
