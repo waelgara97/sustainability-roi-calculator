@@ -114,9 +114,9 @@
                     
                     <div class="form-group">
                         <label for="investment">Annual Service Investment (in millions $) <span class="tooltip"><span class="info-icon">i</span>
-                            <span class="tooltiptext">Default values are used if left blank ($0.25M year 1, $0.275M year 2, $0.29M year 3)</span></span></label>
+                            <span class="tooltiptext">Default values scale with company size. For reference: $50M company: ~$0.25M, $1B company: ~$0.9M, $5B company: ~$1.5M</span></span></label>
                         <div class="input-with-suffix">
-                            <input type="number" id="investment" placeholder="Optional (e.g., 0.25)" step="0.01">
+                            <input type="number" id="investment" placeholder="Optional (auto-scaled with revenue)" step="0.01">
                             <span class="input-suffix">M</span>
                         </div>
                     </div>
@@ -163,6 +163,7 @@
                 <li>Carbon reduction potential: 15% year 1, 19.5% year 2, 25.4% year 3</li>
                 <li>Risk reduction values based on industry risk profile and emission intensity</li>
                 <li>Brand value impact increases from 0.1% of revenue in year 1 to 0.2% in year 3</li>
+                <li>Service investment costs scale based on company size, with larger companies paying more</li>
             </ul>
         </div>
     </div>
