@@ -197,19 +197,19 @@ const maturityLevels = {
     }
 };
 
-// Risk baseline values by risk level - adjusted to be more proportional to other benefits
-// and scale with company size
+// Risk baseline values by risk level - scaled for companies with revenue in millions
+// Values are now expressed in millions
 const riskValues = {
-    high: 300000,    // Increased from 250000
-    medium: 180000,  // Increased from 150000
-    low: 120000      // Increased from 100000
+    high: 0.3,    // 0.3 million = $300,000
+    medium: 0.18,  // 0.18 million = $180,000
+    low: 0.12      // 0.12 million = $120,000
 };
 
-// Default service investment costs
+// Default service investment costs in millions
 const defaultServiceInvestment = {
-    year1: 250000,
-    year2: 275000,
-    year3: 290000
+    year1: 0.25,   // 0.25 million = $250,000
+    year2: 0.275,  // 0.275 million = $275,000
+    year3: 0.29    // 0.29 million = $290,000
 };
 
 // Carbon reduction percentages by year
