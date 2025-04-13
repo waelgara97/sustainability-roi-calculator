@@ -137,29 +137,43 @@ function calculateROI() {
  * @returns {number} - Scaled investment cost
  */
 function calculateScaledInvestment(revenue) {
-    // Base investment in actual dollars (convert from millions in defaultServiceInvestment)
-    const baseInvestment = defaultServiceInvestment.year1 * 1000000;
+    // Base investment for small-medium companies ($250,000)
+    const baseInvestment = 250000;
     
-    // For companies with less than $100M revenue, use the base investment
-    if (revenue <= 100000000) {
+    // For companies with less than $50M revenue, use the base investment
+    if (revenue <= 50000000) {
         return baseInvestment;
     }
     
-    // For larger companies, scale logarithmically
-    // This creates more realistic investment costs for large enterprises
-    // Revenue tiers:
-    // $100M-$1B: 1.0x to 2.0x base
-    // $1B-$10B: 2.0x to 3.5x base
-    // $10B+: 3.5x to 5.0x base
+    // For larger companies, scale logarithmically with more aggressive scaling for large enterprises
+    // This creates more realistic investment costs that better reflect market rates
+    // Revenue tiers with updated scaling:
+    // $50M-$250M: 1.0x to 2.0x base  
+    // $250M-$1B: 2.0x to 3.5x base
+    // $1B-$5B: 3.5x to 6.0x base
+    // $5B-$20B: 6.0x to 9.0x base
+    // $20B+: 9.0x to 12.0x base
     
-    if (revenue <= 1000000000) { // $100M to $1B
-        return baseInvestment * (1.0 + (Math.log10(revenue / 100000000) * 1.0));
+    if (revenue <= 250000000) { // $50M to $250M
+        const scaleFactor = 1.0 + (Math.log(revenue / 50000000) / Math.log(5)) * 1.0;
+        return baseInvestment * scaleFactor;
     } 
-    else if (revenue <= 10000000000) { // $1B to $10B
-        return baseInvestment * (2.0 + (Math.log10(revenue / 1000000000) * 1.5));
+    else if (revenue <= 1000000000) { // $250M to $1B
+        const scaleFactor = 2.0 + (Math.log(revenue / 250000000) / Math.log(4)) * 1.5;
+        return baseInvestment * scaleFactor;
     }
-    else { // Above $10B
-        return baseInvestment * (3.5 + (Math.log10(revenue / 10000000000) * 1.5));
+    else if (revenue <= 5000000000) { // $1B to $5B
+        const scaleFactor = 3.5 + (Math.log(revenue / 1000000000) / Math.log(5)) * 2.5;
+        return baseInvestment * scaleFactor;
+    }
+    else if (revenue <= 20000000000) { // $5B to $20B
+        const scaleFactor = 6.0 + (Math.log(revenue / 5000000000) / Math.log(4)) * 3.0;
+        return baseInvestment * scaleFactor;
+    }
+    else { // Above $20B
+        const scaleFactor = 9.0 + (Math.log(revenue / 20000000000) / Math.log(10)) * 3.0;
+        // Cap at 12x for extremely large companies
+        return baseInvestment * Math.min(12.0, scaleFactor);
     }
 }
 
