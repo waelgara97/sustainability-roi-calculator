@@ -70,9 +70,12 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="revenue">Annual Revenue (USD) <span class="tooltip"><span class="info-icon">i</span>
-                            <span class="tooltiptext">Your company's total annual revenue</span></span></label>
-                        <input type="number" id="revenue" placeholder="e.g., 100000000" required>
+                        <label for="revenue">Annual Revenue (in thousands $) <span class="tooltip"><span class="info-icon">i</span>
+                            <span class="tooltiptext">Your company's total annual revenue in thousands of dollars (e.g., 100,000 = $100 million)</span></span></label>
+                        <div class="input-with-suffix">
+                            <input type="number" id="revenue" placeholder="e.g., 100,000" required>
+                            <span class="input-suffix">K</span>
+                        </div>
                     </div>
                     
                     <div class="form-group">
@@ -82,13 +85,16 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="procurement">Annual Procurement Spend (USD) <span class="tooltip"><span class="info-icon">i</span>
+                        <label for="procurement">Annual Procurement Spend (in thousands $) <span class="tooltip"><span class="info-icon">i</span>
                             <span class="tooltiptext">Optional: If left blank, will be calculated based on industry average</span></span></label>
-                        <input type="number" id="procurement" placeholder="Optional">
+                        <div class="input-with-suffix">
+                            <input type="number" id="procurement" placeholder="Optional">
+                            <span class="input-suffix">K</span>
+                        </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="carbon-price">Carbon Price (USD/ton) <span class="tooltip"><span class="info-icon">i</span>
+                        <label for="carbon-price">Carbon Price ($/ton) <span class="tooltip"><span class="info-icon">i</span>
                             <span class="tooltiptext">Current or projected carbon price you use for internal valuation</span></span></label>
                         <input type="number" id="carbon-price" placeholder="e.g., 50" value="50" required>
                     </div>
@@ -106,9 +112,12 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="investment">Annual Service Investment (USD) <span class="tooltip"><span class="info-icon">i</span>
-                            <span class="tooltiptext">Default values are used if left blank ($250k year 1, $275k year 2, $290k year 3)</span></span></label>
-                        <input type="number" id="investment" placeholder="Optional (e.g., 250000)">
+                        <label for="investment">Annual Service Investment (in thousands $) <span class="tooltip"><span class="info-icon">i</span>
+                            <span class="tooltiptext">Default values are used if left blank ($250K year 1, $275K year 2, $290K year 3)</span></span></label>
+                        <div class="input-with-suffix">
+                            <input type="number" id="investment" placeholder="Optional (e.g., 250)">
+                            <span class="input-suffix">K</span>
+                        </div>
                     </div>
                     
                     <div class="form-actions">
