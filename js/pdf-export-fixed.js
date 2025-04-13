@@ -17,6 +17,12 @@ function generatePDF(companyData, benefits, investment) {
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     
+    // Format values in millions
+    const formatMillions = (value) => {
+        const inMillions = value / 1000000;
+        return `$${inMillions.toFixed(2)}M`;
+    };
+    
     // Add company logo/branding (placeholder)
     doc.setDrawColor(14, 124, 97); // Primary color
     doc.setFillColor(14, 124, 97);
@@ -57,7 +63,7 @@ function generatePDF(companyData, benefits, investment) {
     // Add benefits breakdown table
     doc.setFontSize(14);
     doc.setTextColor(14, 124, 97);
-    doc.text('Benefits Breakdown', pageWidth / 2, 110, { align: 'center' });
+    doc.text('Benefits Breakdown (in millions)', pageWidth / 2, 110, { align: 'center' });
     
     // Table headers
     doc.setFillColor(230, 230, 230);
@@ -72,25 +78,16 @@ function generatePDF(companyData, benefits, investment) {
     doc.text('Year 3', 145, 120);
     doc.text('Total', 175, 120);
     
-    // Format numbers as full dollar amounts
-    const formatCurrency = (number) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            maximumFractionDigits: 0
-        }).format(number);
-    };
-    
     // Table rows
     doc.setFont(undefined, 'normal');
     let yPosition = 130;
     
     // Procurement Savings
     doc.text('Procurement Cost Savings', 25, yPosition);
-    doc.text(formatCurrency(benefits.year1.procurementSavings), 85, yPosition);
-    doc.text(formatCurrency(benefits.year2.procurementSavings), 115, yPosition);
-    doc.text(formatCurrency(benefits.year3.procurementSavings), 145, yPosition);
-    doc.text(formatCurrency(
+    doc.text(formatMillions(benefits.year1.procurementSavings), 85, yPosition);
+    doc.text(formatMillions(benefits.year2.procurementSavings), 115, yPosition);
+    doc.text(formatMillions(benefits.year3.procurementSavings), 145, yPosition);
+    doc.text(formatMillions(
         benefits.year1.procurementSavings + 
         benefits.year2.procurementSavings + 
         benefits.year3.procurementSavings
@@ -100,10 +97,10 @@ function generatePDF(companyData, benefits, investment) {
     
     // Carbon Value
     doc.text('Carbon Value Impact', 25, yPosition);
-    doc.text(formatCurrency(benefits.year1.carbonValueImpact), 85, yPosition);
-    doc.text(formatCurrency(benefits.year2.carbonValueImpact), 115, yPosition);
-    doc.text(formatCurrency(benefits.year3.carbonValueImpact), 145, yPosition);
-    doc.text(formatCurrency(
+    doc.text(formatMillions(benefits.year1.carbonValueImpact), 85, yPosition);
+    doc.text(formatMillions(benefits.year2.carbonValueImpact), 115, yPosition);
+    doc.text(formatMillions(benefits.year3.carbonValueImpact), 145, yPosition);
+    doc.text(formatMillions(
         benefits.year1.carbonValueImpact + 
         benefits.year2.carbonValueImpact + 
         benefits.year3.carbonValueImpact
@@ -113,10 +110,10 @@ function generatePDF(companyData, benefits, investment) {
     
     // Risk Mitigation
     doc.text('Risk Mitigation Value', 25, yPosition);
-    doc.text(formatCurrency(benefits.year1.riskMitigationValue), 85, yPosition);
-    doc.text(formatCurrency(benefits.year2.riskMitigationValue), 115, yPosition);
-    doc.text(formatCurrency(benefits.year3.riskMitigationValue), 145, yPosition);
-    doc.text(formatCurrency(
+    doc.text(formatMillions(benefits.year1.riskMitigationValue), 85, yPosition);
+    doc.text(formatMillions(benefits.year2.riskMitigationValue), 115, yPosition);
+    doc.text(formatMillions(benefits.year3.riskMitigationValue), 145, yPosition);
+    doc.text(formatMillions(
         benefits.year1.riskMitigationValue + 
         benefits.year2.riskMitigationValue + 
         benefits.year3.riskMitigationValue
@@ -126,10 +123,10 @@ function generatePDF(companyData, benefits, investment) {
     
     // Brand Value
     doc.text('Brand Value / Market Access', 25, yPosition);
-    doc.text(formatCurrency(benefits.year1.brandValueImpact), 85, yPosition);
-    doc.text(formatCurrency(benefits.year2.brandValueImpact), 115, yPosition);
-    doc.text(formatCurrency(benefits.year3.brandValueImpact), 145, yPosition);
-    doc.text(formatCurrency(
+    doc.text(formatMillions(benefits.year1.brandValueImpact), 85, yPosition);
+    doc.text(formatMillions(benefits.year2.brandValueImpact), 115, yPosition);
+    doc.text(formatMillions(benefits.year3.brandValueImpact), 145, yPosition);
+    doc.text(formatMillions(
         benefits.year1.brandValueImpact + 
         benefits.year2.brandValueImpact + 
         benefits.year3.brandValueImpact
@@ -143,10 +140,10 @@ function generatePDF(companyData, benefits, investment) {
     doc.setFont(undefined, 'bold');
     
     doc.text('Total Benefits', 25, yPosition);
-    doc.text(formatCurrency(benefits.year1.total), 85, yPosition);
-    doc.text(formatCurrency(benefits.year2.total), 115, yPosition);
-    doc.text(formatCurrency(benefits.year3.total), 145, yPosition);
-    doc.text(formatCurrency(
+    doc.text(formatMillions(benefits.year1.total), 85, yPosition);
+    doc.text(formatMillions(benefits.year2.total), 115, yPosition);
+    doc.text(formatMillions(benefits.year3.total), 145, yPosition);
+    doc.text(formatMillions(
         benefits.year1.total + benefits.year2.total + benefits.year3.total
     ), 175, yPosition);
     
@@ -155,10 +152,10 @@ function generatePDF(companyData, benefits, investment) {
     // Investment
     doc.setFont(undefined, 'normal');
     doc.text('Investment Cost', 25, yPosition);
-    doc.text(formatCurrency(investment.year1), 85, yPosition);
-    doc.text(formatCurrency(investment.year2), 115, yPosition);
-    doc.text(formatCurrency(investment.year3), 145, yPosition);
-    doc.text(formatCurrency(
+    doc.text(formatMillions(investment.year1), 85, yPosition);
+    doc.text(formatMillions(investment.year2), 115, yPosition);
+    doc.text(formatMillions(investment.year3), 145, yPosition);
+    doc.text(formatMillions(
         investment.year1 + investment.year2 + investment.year3
     ), 175, yPosition);
     
@@ -170,10 +167,10 @@ function generatePDF(companyData, benefits, investment) {
     doc.setFont(undefined, 'bold');
     
     doc.text('Net Benefits', 25, yPosition);
-    doc.text(formatCurrency(benefits.year1.total - investment.year1), 85, yPosition);
-    doc.text(formatCurrency(benefits.year2.total - investment.year2), 115, yPosition);
-    doc.text(formatCurrency(benefits.year3.total - investment.year3), 145, yPosition);
-    doc.text(formatCurrency(
+    doc.text(formatMillions(benefits.year1.total - investment.year1), 85, yPosition);
+    doc.text(formatMillions(benefits.year2.total - investment.year2), 115, yPosition);
+    doc.text(formatMillions(benefits.year3.total - investment.year3), 145, yPosition);
+    doc.text(formatMillions(
         (benefits.year1.total + benefits.year2.total + benefits.year3.total) - 
         (investment.year1 + investment.year2 + investment.year3)
     ), 175, yPosition);
