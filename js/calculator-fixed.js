@@ -36,13 +36,8 @@ function calculateROI() {
     const industry = industryParameters[industryCode];
     const maturity = maturityLevels[maturityCode];
     
-    // Set service investment based on user input or defaults
-    const serviceInvestment = { ...defaultServiceInvestment };
-    if (customInvestment) {
-        serviceInvestment.year1 = customInvestment;
-        serviceInvestment.year2 = customInvestment * 1.1; // 10% increase year 2
-        serviceInvestment.year3 = customInvestment * 1.16; // 16% increase year 3
-    }
+    // Calculate scaled service investment based on revenue
+    const serviceInvestment = calculateScaledInvestment(revenue, customInvestment);
     
     // Calculate procurement spend if not provided
     if (!procurementSpend) {
@@ -122,6 +117,45 @@ function calculateROI() {
 }
 
 /**
+ * Calculate scaled service investment based on company size
+ * Uses a logarithmic scaling approach to ensure appropriate cost scaling
+ * @param {number} revenue - Company revenue
+ * @param {number} customInvestment - Custom investment value (if provided)
+ * @returns {object} - Scaled investment values for each year
+ */
+function calculateScaledInvestment(revenue, customInvestment) {
+    // If custom investment is provided, use that
+    if (customInvestment) {
+        return {
+            year1: customInvestment,
+            year2: customInvestment * 1.1, // 10% increase year 2
+            year3: customInvestment * 1.16 // 16% increase year 3
+        };
+    }
+    
+    // Otherwise, calculate based on company size
+    // Reference point: $50M company spends $250K
+    const referenceRevenue = 50000000;
+    const referenceInvestment = defaultServiceInvestment.year1 * 1000000; // Convert to actual dollars
+    
+    // Calculate scaling factor - logarithmic scaling
+    // The formula gives a smooth curve that scales with company size
+    // Small companies get little increase, large companies get substantial but not proportional increase
+    const scalingFactor = Math.log10(revenue / referenceRevenue) / Math.log10(2) + 1;
+    const scalingMultiplier = Math.max(1, scalingFactor);
+    
+    // Calculate scaled investment based on scaling factor
+    const baseInvestment = referenceInvestment * scalingMultiplier;
+    
+    // Return yearly values with appropriate year-over-year increases
+    return {
+        year1: baseInvestment,
+        year2: baseInvestment * 1.1, // 10% increase year 2
+        year3: baseInvestment * 1.16 // 16% increase year 3
+    };
+}
+
+/**
  * Calculate benefits for a specific year
  * @param {number} year - Year number (1, 2, or 3)
  * @param {object} industry - Industry parameters
@@ -150,7 +184,7 @@ function calculateYearlyBenefits(year, industry, maturity, revenue, procurementS
     const carbonValueImpact = supplyChainEmissionsInTons * carbonPrice * carbonReductionPercent;
     
     // Calculate risk mitigation value - scale based on company size
-    const baseRiskValue = riskValues[industry.riskLevel];
+    const baseRiskValue = riskValues[industry.riskLevel] * 1000000; // Convert from millions to actual dollars
     
     // Apply improved revenue scaling with enhanced approach for high-revenue companies
     const revenueScale = calculateRiskRevenueScale(revenue);
