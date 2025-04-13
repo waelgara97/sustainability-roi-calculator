@@ -26,17 +26,17 @@
                 <li><strong>Brand Value / Market Access</strong> - Enhance reputation and access to new markets</li>
             </ol>
         </div>
+        
         <div class="calculator-container">
             <section class="input-section">
                 <h2>Input Parameters</h2>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                    <div style="font-weight: 500;">Enter your company information</div>
+                <div class="scenario-controls">
+                    <div>Enter your company information</div>
                     <div>
-                        <button type="button" id="save-scenario" style="padding: 5px 10px; background-color: var(--secondary-color);">
-                            Save Scenario
-                        </button>
+                        <button type="button" id="save-scenario">Save Scenario</button>
                     </div>
                 </div>
+                
                 <form id="roi-form">
                     <div class="form-group">
                         <label for="industry">Industry <span class="tooltip"><span class="info-icon">i</span>
@@ -111,11 +111,13 @@
                         <input type="number" id="investment" placeholder="Optional (e.g., 250000)">
                     </div>
                     
-                    <button type="submit" id="calculate-btn">Calculate ROI</button>
-                    <button type="button" id="reset-btn" style="background-color: #6c757d; margin-left: 10px;">Reset</button>
+                    <div class="form-actions">
+                        <button type="submit" id="calculate-btn">Calculate ROI</button>
+                        <button type="button" id="reset-btn">Reset</button>
+                    </div>
                     
-                    <div id="saved-scenarios" style="margin-top: 20px; display: none;">
-                        <h3 style="font-size: 16px; border-top: 1px solid #eee; padding-top: 15px;">Saved Scenarios</h3>
+                    <div id="saved-scenarios">
+                        <h3>Saved Scenarios</h3>
                         <div id="scenarios-list"></div>
                     </div>
                 </form>
