@@ -193,24 +193,24 @@ function displayResults(results) {
                     <h3>Recommendations</h3>
                     <p id="recommendations">${recommendations}</p>
                 </div>
+                
+                <div style="margin-top: 20px; text-align: right;">
+                    <button id="export-overall-btn" class="export-btn" style="background-color: #6c757d;">
+                        <span style="display: inline-block; margin-right: 5px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293V6.5z"/>
+                                <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                            </svg>
+                        </span>
+                        Export Results as PDF
+                    </button>
+                </div>
             </div>
             
             <div id="procurement-roi-container" class="roi-tab-content" style="display: none;">
                 <!-- This will be populated by the procurement ROI calculator -->
                 <p>Loading procurement-specific ROI analysis...</p>
             </div>
-        </div>
-        
-        <div style="margin-top: 20px; text-align: right;">
-            <button id="export-btn" style="background-color: #6c757d;">
-                <span style="display: inline-block; margin-right: 5px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293V6.5z"/>
-                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
-                    </svg>
-                </span>
-                Export Results as PDF
-            </button>
         </div>
     `;
     
@@ -266,29 +266,21 @@ function displayResults(results) {
         });
     }
     
-    // Set up PDF export functionality
-    document.getElementById('export-btn').addEventListener('click', function() {
-        // Check which tab is active
-        const isProcurementTab = document.getElementById('procurement-roi-tab').classList.contains('active');
+    // Set up PDF export functionality for overall ROI
+    document.getElementById('export-overall-btn').addEventListener('click', function() {
+        // Prepare data for overall ROI PDF export
+        const companyData = {
+            industry: results.industry.name,
+            revenue: formatMillions(results.revenue),
+            maturity: document.getElementById('maturity').value.charAt(0).toUpperCase() + document.getElementById('maturity').value.slice(1),
+            roiRatio: results.roiRatio.toFixed(2),
+            netBenefits: formatMillions(results.netBenefits),
+            paybackMonths: results.paybackMonths,
+            npv: formatMillions(results.npv)
+        };
         
-        if (isProcurementTab) {
-            // Export procurement-specific PDF
-            exportProcurementROIPDF(results);
-        } else {
-            // Prepare data for overall ROI PDF export
-            const companyData = {
-                industry: results.industry.name,
-                revenue: formatMillions(results.revenue),
-                maturity: document.getElementById('maturity').value.charAt(0).toUpperCase() + document.getElementById('maturity').value.slice(1),
-                roiRatio: results.roiRatio.toFixed(2),
-                netBenefits: formatMillions(results.netBenefits),
-                paybackMonths: results.paybackMonths,
-                npv: formatMillions(results.npv)
-            };
-            
-            // Generate PDF
-            generatePDF(companyData, results.benefits, results.serviceInvestment);
-        }
+        // Generate PDF
+        generatePDF(companyData, results.benefits, results.serviceInvestment);
     });
     
     // Create charts with values in millions
