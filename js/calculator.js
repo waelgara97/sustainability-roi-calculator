@@ -10,9 +10,7 @@ const savedScenarios = [];
 const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    notation: 'compact',
-    compactDisplay: 'short',
-    maximumFractionDigits: 1
+    maximumFractionDigits: 0
 });
 
 /**
@@ -21,20 +19,15 @@ const formatter = new Intl.NumberFormat('en-US', {
 function calculateROI() {
     // Get input values from form
     const industryCode = document.getElementById('industry').value;
-    const revenueInK = parseFloat(document.getElementById('revenue').value);
+    const revenue = parseFloat(document.getElementById('revenue').value) * 1000; // Convert K to actual dollars
     const supplierCount = document.getElementById('suppliers').value ? parseInt(document.getElementById('suppliers').value) : null;
-    let procurementSpendInK = document.getElementById('procurement').value ? parseFloat(document.getElementById('procurement').value) : null;
+    let procurementSpend = document.getElementById('procurement').value ? parseFloat(document.getElementById('procurement').value) * 1000 : null; // Convert K to actual dollars
     const carbonPrice = parseFloat(document.getElementById('carbon-price').value);
     const maturityCode = document.getElementById('maturity').value;
-    const customInvestmentInK = document.getElementById('investment').value ? parseFloat(document.getElementById('investment').value) : null;
-    
-    // Convert from thousands to actual dollars
-    const revenue = revenueInK * 1000;
-    let procurementSpend = procurementSpendInK ? procurementSpendInK * 1000 : null;
-    const customInvestment = customInvestmentInK ? customInvestmentInK * 1000 : null;
+    const customInvestment = document.getElementById('investment').value ? parseFloat(document.getElementById('investment').value) * 1000 : null; // Convert K to actual dollars
     
     // Validate inputs
-    if (!industryCode || !revenueInK || !carbonPrice || !maturityCode) {
+    if (!industryCode || isNaN(revenue) || !carbonPrice || !maturityCode) {
         alert("Please fill in all required fields");
         return;
     }
